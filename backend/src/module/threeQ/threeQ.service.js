@@ -291,7 +291,8 @@ async function getOrCreateParticipant(data) {
     collegeEmail: data.collegeEmail,
     mobileNumber: data.mobileNumber,
     campus: data.campus,
-    livingAt: data.livingAt
+    livingAt: data.livingAt,
+    gender: data.gender
   });
 }
 
