@@ -123,6 +123,26 @@ export async function saveAssessmentAnswer(
 
 
 /* =========================================================
+   SAVE / UPDATE MULTIPLE ANSWERS
+   ========================================================= */
+
+export async function saveAssessmentAnswersBatch(
+  sessionId,
+  answersArray
+) {
+  return request(
+    `/3q/sessions/${sessionId}/answers/batch`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        answers: answersArray
+      })
+    }
+  );
+}
+
+
+/* =========================================================
    SUBMIT ASSESSMENT
    ========================================================= */
 

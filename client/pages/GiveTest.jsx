@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import {
   getAssessmentForSession,
   getPublishedAssessment,
-  saveAssessmentAnswer,
+  saveAssessmentAnswersBatch,
   startAssessment,
   submitAssessment
 } from "../services/threeQApi.js";
@@ -384,6 +384,16 @@ export default function GiveTest() {
         setSubmitting(true);
         setError("");
 
+        const answersArray = Object.entries(answers).map(([questionId, ans]) => ({
+          questionId,
+          selectedOptionId: ans.selectedOptionId,
+          answerText: ans.answerText
+        }));
+
+        if (answersArray.length > 0) {
+          await saveAssessmentAnswersBatch(sessionId, answersArray);
+        }
+
         const response =
           await submitAssessment(
             sessionId
@@ -545,46 +555,20 @@ export default function GiveTest() {
         ? answerText
         : null;
 
-    try {
-      setSavingQuestionId(
-        question.id
-      );
+    setAnswers(
+      (current) => ({
+        ...current,
+        [question.id]: {
+          selectedOptionId:
+            selectedOptionId ??
+            null,
+          answerText:
+            normalizedText ?? ""
+        }
+      })
+    );
 
-      setError("");
-
-      await saveAssessmentAnswer(
-        sessionId,
-        question.id,
-        selectedOptionId,
-        normalizedText
-      );
-
-      setAnswers(
-        (current) => ({
-          ...current,
-          [question.id]: {
-            selectedOptionId:
-              selectedOptionId ??
-              null,
-            answerText:
-              normalizedText ?? ""
-          }
-        })
-      );
-
-      return true;
-    } catch (requestError) {
-      setError(
-        requestError?.message ||
-        "Unable to save this answer."
-      );
-
-      return false;
-    } finally {
-      setSavingQuestionId(
-        null
-      );
-    }
+    return true;
   }
 
   /* =======================================================
@@ -884,6 +868,16 @@ export default function GiveTest() {
     try {
       setSubmitting(true);
       setError("");
+
+      const answersArray = Object.entries(answers).map(([questionId, ans]) => ({
+        questionId,
+        selectedOptionId: ans.selectedOptionId,
+        answerText: ans.answerText
+      }));
+
+      if (answersArray.length > 0) {
+        await saveAssessmentAnswersBatch(sessionId, answersArray);
+      }
 
       const response =
         await submitAssessment(
