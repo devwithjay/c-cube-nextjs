@@ -4,11 +4,12 @@ import {
   useState
 } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   getAssessmentForSession,
   getPublishedAssessment,
+  getTestByIdPublic,
   saveAssessmentAnswersBatch,
   startAssessment,
   submitAssessment
@@ -142,6 +143,7 @@ function getQuestionType(question) {
 
 export default function GiveTest() {
   const navigate = useNavigate();
+  const { testId } = useParams();
 
   const [assessment, setAssessment] =
     useState(null);
@@ -249,8 +251,12 @@ export default function GiveTest() {
         setLoading(true);
         setError("");
 
-        const response =
-          await getPublishedAssessment();
+        let response;
+        if (testId) {
+          response = await getTestByIdPublic(testId);
+        } else {
+          response = await getPublishedAssessment();
+        }
 
         if (!mounted) {
           return;
@@ -917,31 +923,30 @@ export default function GiveTest() {
   }
 
   /* =======================================================
-     NO ASSESSMENT
+     NO ASSESSMENT OR UNPUBLISHED
      ======================================================= */
 
-  if (!assessment) {
+  if (!assessment || assessment.status !== "published") {
     return (
       <Shell>
         <div className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-2xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-2xl">
             !
           </div>
 
           <h1 className="mt-5 text-2xl font-black text-slate-950">
-            Assessment unavailable
+            {assessment ? "Assessment Not Active Yet" : "Assessment unavailable"}
           </h1>
 
-          <p className="mt-3 text-slate-600">
-            {error ||
-              "No assessment is currently available."}
+          <p className="mt-3 text-slate-600 max-w-lg mx-auto">
+            {assessment?.status === "draft" && assessment?.live_message
+              ? assessment.live_message
+              : error || "No assessment is currently available."}
           </p>
 
           <button
             type="button"
-            onClick={() =>
-              navigate("/")
-            }
+            onClick={() => navigate("/")}
             className="mt-7 rounded-xl bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
           >
             Return to website

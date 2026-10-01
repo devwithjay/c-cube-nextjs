@@ -50,6 +50,9 @@ export default function Router() {
 
       {/* PUBLIC */}
       <Route path="/give-test" element={<GiveTest />} />
+      <Route path="/give-test/:testId" element={<GiveTest />} />
+      <Route path="/test" element={<Navigate to="/give-test" replace />} />
+      <Route path="/test/:testId" element={<Navigate to="/give-test/:testId" replace />} />
       <Route path="/" element={<App />} />
       <Route path="*" element={<App />} />
     </Routes>

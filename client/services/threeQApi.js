@@ -191,3 +191,7 @@ export async function requestRetestPermission(
     }
   );
 }
+
+export async function getTestByIdPublic(testId) {
+  return request(`/3q/tests/${testId}`);
+}

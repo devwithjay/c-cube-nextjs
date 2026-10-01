@@ -8,9 +8,20 @@ import {
 } from "react-router-dom";
 
 import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+
+import {
   getAdminTests,
   clearAdminToken,
   createAdminTest,
+  updateAdminTest,
   deleteAdminTest
 } from "../../services/adminApi.js";
 
@@ -20,11 +31,13 @@ export default function AdminDashboard() {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingTestId, setEditingTestId] = useState(null);
   const [createForm, setCreateForm] = useState({
     title: "",
     description: "",
-    durationSeconds: 1800
+    durationSeconds: 1800,
+    liveMessage: "Assessment will be live shortly."
   });
   const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
@@ -75,19 +88,45 @@ export default function AdminDashboard() {
     navigate("/admin/settings");
   }
 
-  async function handleCreateTest(event) {
+  function openCreateDrawer() {
+    setEditingTestId(null);
+    setCreateForm({ title: "", description: "", durationSeconds: 1800, liveMessage: "Assessment will be live shortly." });
+    setIsDrawerOpen(true);
+  }
+
+  function openEditDrawer(test) {
+    setEditingTestId(test.id);
+    setCreateForm({
+      title: test.title,
+      description: test.description || "",
+      durationSeconds: test.duration_seconds || 1800,
+      liveMessage: test.live_message || "Assessment will be live shortly."
+    });
+    setIsDrawerOpen(true);
+  }
+
+  async function handleSaveTest(event) {
     event.preventDefault();
 
     try {
       setCreating(true);
       setError("");
-      const response = await createAdminTest({
+      const payload = {
         ...createForm,
-        durationSeconds: Number(createForm.durationSeconds)
-      });
-      navigate(`/admin/tests/${response?.data?.id}`);
+        durationSeconds: Number(createForm.durationSeconds),
+        liveMessage: createForm.liveMessage
+      };
+      
+      if (editingTestId) {
+        await updateAdminTest(editingTestId, payload);
+      } else {
+        await createAdminTest(payload);
+      }
+      
+      await loadTests();
+      setIsDrawerOpen(false);
     } catch (requestError) {
-      setError(requestError?.message || "Unable to create assessment.");
+      setError(requestError?.message || "Unable to save assessment.");
     } finally {
       setCreating(false);
     }
@@ -191,76 +230,81 @@ export default function AdminDashboard() {
 
           <button
             type="button"
-            onClick={() => setShowCreateForm((current) => !current)}
+            onClick={openCreateDrawer}
             className="mt-5 rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground transition hover:opacity-90"
           >
-            {showCreateForm ? "Cancel" : "Create assessment"}
+            Create assessment
           </button>
 
         </div>
 
-        {showCreateForm && (
-          <form
-            onSubmit={handleCreateTest}
-            className="mb-8 rounded-2xl bg-white p-6 shadow-sm"
-          >
-            <h3 className="text-xl font-black text-slate-950">
-              New assessment
-            </h3>
-            <div className="mt-5 grid gap-5 md:grid-cols-[1fr_220px]">
-              <label className="text-sm font-bold text-slate-700">
-                Title
-                <input
-                  required
-                  value={createForm.title}
-                  onChange={(event) =>
-                    setCreateForm({
-                      ...createForm,
-                      title: event.target.value
-                    })
-                  }
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
-                />
-              </label>
-              <label className="text-sm font-bold text-slate-700">
-                Duration (seconds)
-                <input
-                  required
-                  min="1"
-                  type="number"
-                  value={createForm.durationSeconds}
-                  onChange={(event) =>
-                    setCreateForm({
-                      ...createForm,
-                      durationSeconds: event.target.value
-                    })
-                  }
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
-                />
-              </label>
+        <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+          <DrawerContent>
+            <div className="mx-auto w-full max-w-2xl px-4 py-6">
+              <DrawerHeader>
+                <DrawerTitle>{editingTestId ? "Edit Assessment Details" : "New Assessment"}</DrawerTitle>
+                <DrawerDescription>Configure the basic details of the assessment.</DrawerDescription>
+              </DrawerHeader>
+              <form onSubmit={handleSaveTest} className="p-4 flex flex-col gap-5">
+                <div className="grid gap-5 md:grid-cols-[1fr_220px]">
+                  <label className="text-sm font-bold text-slate-700">
+                    Title
+                    <input
+                      required
+                      value={createForm.title}
+                      onChange={(event) => setCreateForm({ ...createForm, title: event.target.value })}
+                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                    />
+                  </label>
+                  <label className="text-sm font-bold text-slate-700">
+                    Duration (seconds)
+                    <input
+                      required
+                      min="1"
+                      type="number"
+                      value={createForm.durationSeconds}
+                      onChange={(event) => setCreateForm({ ...createForm, durationSeconds: event.target.value })}
+                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                    />
+                  </label>
+                </div>
+                <label className="text-sm font-bold text-slate-700">
+                  Live Message (Timing/Details)
+                  <input
+                    required
+                    value={createForm.liveMessage}
+                    onChange={(event) => setCreateForm({ ...createForm, liveMessage: event.target.value })}
+                    placeholder="e.g. Assessment will be live on 2nd of October, from 6 AM to 11 PM"
+                    className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                  />
+                </label>
+                <label className="text-sm font-bold text-slate-700">
+                  Description
+                  <textarea
+                    rows="3"
+                    value={createForm.description}
+                    onChange={(event) => setCreateForm({ ...createForm, description: event.target.value })}
+                    className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                  />
+                </label>
+                <DrawerFooter className="px-0">
+                  <button
+                    type="submit"
+                    disabled={creating}
+                    className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    {creating ? "Saving..." : editingTestId ? "Save Changes" : "Create draft"}
+                  </button>
+                  <DrawerClose asChild>
+                    <button type="button" className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-900 hover:bg-slate-50">
+                      Cancel
+                    </button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </form>
             </div>
-            <label className="mt-5 block text-sm font-bold text-slate-700">
-              Description
-              <textarea
-                rows="3"
-                value={createForm.description}
-                onChange={(event) =>
-                  setCreateForm({
-                    ...createForm,
-                    description: event.target.value
-                  })
-                }
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
-              />
-            </label>
-            <button
-              disabled={creating}
-              className="mt-5 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:opacity-50"
-            >
-              {creating ? "Creating..." : "Create draft"}
-            </button>
-          </form>
-        )}
+          </DrawerContent>
+        </Drawer>
 
         {/* =====================================================
             ERROR
@@ -410,12 +454,17 @@ export default function AdminDashboard() {
                     <div className="mt-6 flex gap-3">
                       <button
                         type="button"
-                        onClick={() =>
-                          openAssessment(test.id)
-                        }
+                        onClick={() => openEditDrawer(test)}
+                        className="flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-black text-slate-900 transition hover:-translate-y-0.5 hover:bg-slate-50"
+                      >
+                        Edit Details
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openAssessment(test.id)}
                         className="flex-1 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
                       >
-                        Edit Assessment
+                        Manage Content
                       </button>
                     </div>
 
@@ -448,7 +497,7 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => {
-                            const link = window.location.origin;
+                            const link = `${window.location.origin}/give-test/${test.id}`;
                             navigator.clipboard.writeText(link);
                             alert("Link copied to clipboard: " + link);
                           }}
