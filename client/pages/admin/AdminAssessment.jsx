@@ -1797,7 +1797,7 @@ export default function AdminAssessment() {
                                           }
                                         )
                                       }
-                                      className="min-w-0 flex-1 rounded-lg border border-border px-3 py-2"
+                                      className="min-w-0 flex-1 rounded-lg border border-border px-3 py-2 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                                     />
 
                                     {questionForm.options.length >
