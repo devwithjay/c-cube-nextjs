@@ -15,6 +15,15 @@ import {
   submitAssessment
 } from "../services/threeQApi.js";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 /* =========================================================
    CONSTANTS
    ========================================================= */
@@ -177,6 +186,12 @@ export default function GiveTest() {
 
   const [currentSectionIndex, setCurrentSectionIndex] =
     useState(0);
+
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    title: "",
+    description: ""
+  });
 
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(0);
@@ -848,30 +863,24 @@ export default function GiveTest() {
         questions.length -
         answeredCount;
 
-      if (
-        unanswered > 0 &&
-        !window.confirm(
-          `${unanswered} question${unanswered === 1
-            ? ""
-            : "s"
-          } ${unanswered === 1
-            ? "is"
-            : "are"
-          } unanswered. Do you want to submit anyway?`
-        )
-      ) {
-        return;
+      let description = "Are you sure you want to submit the assessment? You will not be able to change your answers after submission.";
+      
+      if (unanswered > 0) {
+        description = `${unanswered} question${unanswered === 1 ? "" : "s"} ${unanswered === 1 ? "is" : "are"} unanswered. Do you want to submit anyway? You will not be able to change your answers after submission.`;
       }
 
-      if (
-        !window.confirm(
-          "Are you sure you want to submit the assessment? You will not be able to change your answers after submission."
-        )
-      ) {
-        return;
-      }
+      setConfirmDialog({
+        isOpen: true,
+        title: "Submit Assessment",
+        description
+      });
+      return;
     }
 
+    executeSubmit();
+  }
+
+  async function executeSubmit() {
     try {
       setSubmitting(true);
       setError("");
@@ -1849,6 +1858,43 @@ export default function GiveTest() {
             : "Submit assessment"}
         </button>
       </div>
+
+      <Dialog
+        open={confirmDialog.isOpen}
+        onOpenChange={(isOpen) =>
+          setConfirmDialog({ ...confirmDialog, isOpen })
+        }
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {confirmDialog.title}
+            </DialogTitle>
+            <DialogDescription>
+              {confirmDialog.description}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 sm:justify-end gap-2">
+            <button
+              onClick={() =>
+                setConfirmDialog({ ...confirmDialog, isOpen: false })
+              }
+              className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setConfirmDialog({ ...confirmDialog, isOpen: false });
+                executeSubmit();
+              }}
+              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              OK
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Shell>
   );
 }
