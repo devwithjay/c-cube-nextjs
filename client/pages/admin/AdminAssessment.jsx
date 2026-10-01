@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
   Select,
@@ -1312,25 +1313,18 @@ export default function AdminAssessment() {
 
                       {isDraft && (
 
-                        <button
+                        <Button
                           type="button"
+                          variant="outline"
+                          size="sm"
                           onClick={() => {
-
-                            setEditingSectionId(
-                              section.id
-                            );
-
-                            setSectionForm(
-                              getSectionForm(
-                                section
-                              )
-                            );
-
+                            setEditingSectionId(section.id);
+                            setSectionForm(getSectionForm(section));
                           }}
-                          className="rounded-lg border border-border px-3 py-1.5 text-xs font-black text-muted-foreground hover:bg-muted"
+                          className="font-black text-muted-foreground h-8 text-xs"
                         >
                           Edit section
-                        </button>
+                        </Button>
 
                       )}
 
@@ -1386,37 +1380,31 @@ export default function AdminAssessment() {
 
                               </div>
 
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 items-start">
 
                                 {isDraft && (
 
                                   <>
-                                    <button
+                                    <Button
                                       type="button"
-                                      onClick={() =>
-                                        editQuestion(
-                                          section.id,
-                                          question
-                                        )
-                                      }
-                                      className="rounded-lg border border-border bg-card text-card-foreground px-3 py-1.5 text-xs font-black text-foreground"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => editQuestion(section.id, question)}
+                                      className="h-8 text-xs font-black"
                                     >
                                       Edit
-                                    </button>
+                                    </Button>
 
-                                    <button
+                                    <Button
                                       type="button"
+                                      variant="destructive"
+                                      size="sm"
                                       disabled={saving}
-                                      onClick={() =>
-                                        removeQuestion(
-                                          section.id,
-                                          question.id
-                                        )
-                                      }
-                                      className="rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 text-xs font-black text-red-600 dark:text-red-400"
+                                      onClick={() => requestDeleteQuestion(section.id, question.id)}
+                                      className="h-8 text-xs font-black"
                                     >
                                       Delete
-                                    </button>
+                                    </Button>
                                   </>
 
                                 )}
