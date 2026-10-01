@@ -1,7 +1,8 @@
 import {
   getSectionsForTest,
   createTestSection,
-  updateTestSection
+  updateTestSection,
+  deleteTestSection
 } from "./admin.section.service.js";
 
 /**
@@ -72,7 +73,8 @@ export async function updateSection(req, res, next) {
       });
     }
 
-    const section = await updateTestSection(
+    const section = await updateTestSection,
+  deleteTestSection(
       sectionId,
       req.body
     );
@@ -81,6 +83,30 @@ export async function updateSection(req, res, next) {
       success: true,
       message: "Section updated successfully.",
       data: section
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+/**
+ * DELETE /api/admin/tests/sections/:sectionId
+ */
+export async function deleteSection(req, res, next) {
+  try {
+    const sectionId = Number(req.params.sectionId);
+
+    if (!Number.isInteger(sectionId) || sectionId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid section ID."
+      });
+    }
+
+    await deleteTestSection(sectionId);
+
+    return res.json({
+      success: true,
+      message: "Section deleted successfully."
     });
   } catch (error) {
     next(error);

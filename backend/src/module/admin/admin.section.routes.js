@@ -5,7 +5,8 @@ import { requireAdmin } from "./admin.middleware.js";
 import {
   listSections,
   createSection,
-  updateSection
+  updateSection,
+  deleteSection
 } from "./admin.section.controller.js";
 
 const router = express.Router();
@@ -33,7 +34,17 @@ router.post(
  */
 router.put(
   "/sections/:sectionId",
-  updateSection
+  updateSection,
+  deleteSection
+);
+
+
+/**
+ * DELETE /api/admin/tests/sections/:sectionId
+ */
+router.delete(
+  "/sections/:sectionId",
+  deleteSection
 );
 
 export default router;

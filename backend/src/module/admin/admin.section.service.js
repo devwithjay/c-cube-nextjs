@@ -4,7 +4,8 @@ import {
   findSectionById,
   findSectionByNumber,
   createSection,
-  updateSection
+  updateSection,
+  deleteSectionById
 } from "./admin.section.repository.js";
 
 /**
@@ -140,10 +141,32 @@ export async function updateTestSection(sectionId, data) {
     throw error;
   }
 
-  return updateSection(sectionId, {
+  return updateSection,
+  deleteSectionById(sectionId, {
     name: data.name.trim(),
     description: data.description?.trim() || null,
     questionLimit,
     sortOrder
   });
+}
+/**
+ * Delete a test section
+ */
+export async function deleteTestSection(sectionId) {
+  const section = await findSectionById(sectionId);
+
+  if (!section) {
+    const error = new Error("Section not found.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const test = await findTestById(section.test_id);
+  if (test && test.status !== "draft") {
+    const error = new Error("Cannot delete a section of a published or closed test.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  await deleteSectionById(sectionId);
 }

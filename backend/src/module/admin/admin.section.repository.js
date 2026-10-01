@@ -146,3 +146,11 @@ export async function updateSection(sectionId, section) {
 
   return findSectionById(sectionId);
 }
+/**
+ * Delete a section by ID.
+ */
+export async function deleteSectionById(sectionId) {
+  // Delete questions for this section first (if not cascading)
+  await run(`DELETE FROM three_q_questions WHERE section_id = ?`, [sectionId]);
+  await run(`DELETE FROM three_q_sections WHERE id = ?`, [sectionId]);
+}

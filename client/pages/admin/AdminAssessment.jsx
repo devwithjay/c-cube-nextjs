@@ -24,7 +24,8 @@ import {
   unpublishAdminTest,
   updateAdminTest,
   updateSectionQuestion,
-  updateTestSection
+  updateTestSection,
+  deleteTestSection
 } from "../../services/adminApi.js";
 
 
@@ -812,6 +813,30 @@ export default function AdminAssessment() {
   }
 
 
+  const [sectionToDelete, setSectionToDelete] = useState(null);
+
+  async function confirmDeleteSection() {
+    if (!sectionToDelete) return;
+    try {
+      setSaving(true);
+      await deleteTestSection(sectionToDelete);
+      
+      setSections((current) => current.filter((s) => s.id !== sectionToDelete));
+      setQuestions((current) => {
+        const next = { ...current };
+        delete next[sectionToDelete];
+        return next;
+      });
+      
+      showNotice("Section deleted successfully.");
+    } catch (requestError) {
+      showNotice(requestError?.message || "Failed to delete section.", true);
+    } finally {
+      setSaving(false);
+      setSectionToDelete(null);
+    }
+  }
+
   async function changeStatus(
     action,
     successMessage
@@ -1322,18 +1347,29 @@ export default function AdminAssessment() {
 
                       {isDraft && (
 
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setEditingSectionId(section.id);
-                            setSectionForm(getSectionForm(section));
-                          }}
-                          className="font-black text-muted-foreground h-8 text-xs"
-                        >
-                          Edit section
-                        </Button>
+                        <div className="flex gap-2 items-start">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingSectionId(section.id);
+                              setSectionForm(getSectionForm(section));
+                            }}
+                            className="font-black text-muted-foreground h-8 text-xs"
+                          >
+                            Edit section
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setSectionToDelete(section.id)}
+                            className="h-8 text-xs font-black"
+                          >
+                            Delete
+                          </Button>
+                        </div>
 
                       )}
 

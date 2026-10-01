@@ -438,3 +438,14 @@ export async function unpublishAdminTest(
     }
   );
 }
+
+export async function deleteTestSection(
+  sectionId
+) {
+  return adminRequest(
+    `/admin/tests/sections/${sectionId}`,
+    {
+      method: "DELETE"
+    }
+  );
+}

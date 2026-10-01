@@ -169,7 +169,6 @@ export default function AdminResults() {
                   })}
                 </div>
               </div>
-              </div>
             </div>
           )}
         </DialogContent>
