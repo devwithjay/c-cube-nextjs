@@ -416,17 +416,9 @@ export async function createNewQuestion(
 
   /*
   |--------------------------------------------------------------------------
-  | Only draft tests can be edited
+  | Only draft tests can be edited (RESTRICTION REMOVED)
   |--------------------------------------------------------------------------
   */
-
-  if (
-    test.status !== "draft"
-  ) {
-    throw createError(
-      "Questions can only be added to a draft test."
-    );
-  }
 
   /*
   |--------------------------------------------------------------------------
@@ -639,13 +631,7 @@ export async function updateExistingQuestion(
   |--------------------------------------------------------------------------
   */
 
-  if (
-    test.status !== "draft"
-  ) {
-    throw createError(
-      "Questions can only be updated in a draft test."
-    );
-  }
+
 
   /*
   |--------------------------------------------------------------------------
@@ -797,13 +783,6 @@ export async function deleteQuestion(
     );
   }
 
-  if (
-    test.status !== "draft"
-  ) {
-    throw createError(
-      "Questions can only be deleted from a draft test."
-    );
-  }
 
   await deactivateQuestion(
     questionId

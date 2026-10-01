@@ -34,13 +34,7 @@ export async function createTestSection(testId, data) {
     throw error;
   }
 
-  if (test.status !== "draft") {
-    const error = new Error(
-      "Sections can only be created for a draft test."
-    );
-    error.statusCode = 400;
-    throw error;
-  }
+
 
   const sectionNumber = Number(data.sectionNumber);
   const questionLimit = Number(data.questionLimit);
@@ -119,13 +113,7 @@ export async function updateTestSection(sectionId, data) {
     throw error;
   }
 
-  if (test.status !== "draft") {
-    const error = new Error(
-      "Sections can only be updated for a draft test."
-    );
-    error.statusCode = 400;
-    throw error;
-  }
+
 
   const questionLimit = Number(data.questionLimit);
   const sortOrder = Number(data.sortOrder);

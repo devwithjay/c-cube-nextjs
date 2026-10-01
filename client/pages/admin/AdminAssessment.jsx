@@ -141,8 +141,9 @@ export default function AdminAssessment() {
     useState("");
 
 
-  const isDraft =
-    test?.status === "draft";
+  // The user explicitly requested to be able to edit/add questions
+  // and sections at any time, even if the test is not a draft.
+  const isDraft = true;
 
 
   useEffect(() => {
