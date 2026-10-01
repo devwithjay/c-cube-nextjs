@@ -118,6 +118,12 @@ export default function App() {
               Contact
             </button>
             <button
+              onClick={() => window.location.href = '/give-test'}
+              className="rounded-full px-4 py-2 text-sm font-bold text-primary bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all ml-2 border border-primary/20"
+            >
+              Give Test
+            </button>
+            <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="ml-2 rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors focus:outline-none"
               aria-label="Toggle theme"
@@ -128,6 +134,12 @@ export default function App() {
 
           {/* Mobile toggle */}
           <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => window.location.href = '/test'}
+              className="rounded-full px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all border border-primary/20"
+            >
+              Test
+            </button>
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors focus:outline-none"
@@ -196,7 +208,7 @@ export default function App() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
-            className="mt-12 flex justify-center"
+            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <HoverBorderGradient
               containerClassName="rounded-full"
@@ -207,6 +219,14 @@ export default function App() {
               <span>Explore C Cube</span>
               <ChevronRight className="h-4 w-4" />
             </HoverBorderGradient>
+
+            <button
+              onClick={() => window.location.href = '/give-test'}
+              className="rounded-full bg-primary text-primary-foreground px-8 py-3.5 text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all border border-primary-foreground/10 flex items-center gap-2"
+            >
+              Give Test
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </motion.div>
         </div>
       </section>
@@ -316,7 +336,7 @@ export default function App() {
                   <div className="p-8 flex-1 flex flex-col">
                     <p className="text-sm font-bold text-primary uppercase tracking-wider mb-3">{event.date}</p>
                     <h3 className="text-xl font-bold text-foreground mb-3">{event.title}</h3>
-                    <p className="text-base text-muted-foreground leading-relaxed">{event.description}</p>
+                    <p className="text-base text-muted-foreground leading-relaxed line-clamp-3">{event.description}</p>
                   </div>
                 </BackgroundGradient>
               </motion.div>
@@ -414,20 +434,19 @@ export default function App() {
                 key={i} 
                 className="group flex flex-col items-center text-center"
               >
-                <div className="relative mb-8 w-full max-w-[280px] aspect-[4/5] rounded-3xl overflow-hidden drop-shadow-xl transition-all duration-500 bg-card border-[6px] border-background">
+                <div className="relative mb-8 w-full max-w-[280px] aspect-[4/5] rounded-3xl overflow-hidden drop-shadow-xl transition-all duration-500">
                   <img
                     src={member.image}
                     alt={member.name}
                     className="w-full h-full object-cover object-[center_top] group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/95 backdrop-blur-md px-6 py-2.5 text-xs font-bold text-foreground uppercase tracking-widest shadow-lg border border-border/50 whitespace-nowrap">
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/95 backdrop-blur-md px-6 py-2.5 text-xs font-bold text-foreground uppercase tracking-widest shadow-lg whitespace-nowrap">
                     {member.position}
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-foreground">{member.name}</h3>
                 <p className="text-sm font-medium text-primary mt-2">{member.branch}</p>
                 <p className="text-sm text-muted-foreground mt-1">{member.year}</p>
-                <p className="text-base text-muted-foreground mt-4 leading-relaxed max-w-[280px]">{member.intro}</p>
               </motion.div>
             ))}
           </motion.div>

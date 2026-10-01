@@ -38,6 +38,7 @@
     "react-router-dom": "^7.18.3",
     "simplex-noise": "^4.0.3",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2",
     "zod": "^4.6.5"
   },
   "devDependencies": {
