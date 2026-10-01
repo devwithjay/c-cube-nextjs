@@ -165,21 +165,7 @@ export async function updateDraftTest(
   }
 
 
-  if (
-    existing.status !==
-    "draft"
-  ) {
 
-    const error =
-      new Error(
-        "Only draft tests can be edited."
-      );
-
-    error.statusCode = 409;
-
-    throw error;
-
-  }
 
 
   const title =
@@ -269,21 +255,7 @@ export async function publishDraftTest(
   }
 
 
-  if (
-    existing.status !==
-    "draft"
-  ) {
 
-    const error =
-      new Error(
-        "Only draft tests can be published."
-      );
-
-    error.statusCode = 409;
-
-    throw error;
-
-  }
 
 
   /*

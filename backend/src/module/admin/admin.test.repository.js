@@ -138,7 +138,7 @@ export async function updateTest(
 
     WHERE id = ?
 
-    AND status = 'draft'
+    
     `,
     [
       test.title,
@@ -177,7 +177,7 @@ export async function publishTest(
 
     WHERE id = ?
 
-    AND status = 'draft'
+    
     `,
     [testId]
   );
