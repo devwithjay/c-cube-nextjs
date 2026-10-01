@@ -1880,12 +1880,28 @@ function Shell({
 function LoadingState({
   text
 }) {
+  const [loadingText, setLoadingText] = useState(text);
+
+  useEffect(() => {
+    const originalText = text;
+    const timeouts = [
+      setTimeout(() => setLoadingText("Waking up server (this may take a few seconds in dev)..."), 3000),
+      setTimeout(() => setLoadingText("Compiling backend routes..."), 8000),
+      setTimeout(() => setLoadingText("Almost ready..."), 15000),
+    ];
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+      setLoadingText(originalText);
+    };
+  }, [text]);
+
   return (
     <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
       <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600" />
 
-      <p className="mt-5 font-bold text-slate-500">
-        {text}
+      <p className="mt-5 font-bold text-slate-500 transition-opacity duration-300">
+        {loadingText}
       </p>
     </div>
   );
