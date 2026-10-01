@@ -468,7 +468,7 @@ export default function GiveTest() {
         response?.data?.sessionId;
 
       const session =
-        response?.data?.session;
+        response?.data;
 
       if (!newSessionId) {
         throw new Error(

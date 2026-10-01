@@ -7,6 +7,9 @@ import {
   useNavigate
 } from "react-router-dom";
 
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
+
 import {
   Drawer,
   DrawerClose,
@@ -27,6 +30,7 @@ import {
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
 
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -184,6 +188,15 @@ export default function AdminDashboard() {
           {/* Header Actions */}
           <div className="flex items-center gap-3">
 
+            {/* Theme Toggle */}
+            <button
+              type="button"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-xl border bg-card p-2.5 text-card-foreground transition hover:bg-muted"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
             {/* Settings */}
             <button
               type="button"
@@ -296,7 +309,7 @@ export default function AdminDashboard() {
                     {creating ? "Saving..." : editingTestId ? "Save Changes" : "Create draft"}
                   </button>
                   <DrawerClose asChild>
-                    <button type="button" className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-900 hover:bg-slate-50">
+                    <button type="button" className="rounded-xl border border-slate-200 bg-card px-5 py-3 text-sm font-black text-slate-900 hover:bg-slate-50">
                       Cancel
                     </button>
                   </DrawerClose>
@@ -319,7 +332,7 @@ export default function AdminDashboard() {
             LOADING
            ===================================================== */}
         {loading && (
-          <div className="rounded-[2rem] bg-white p-12 text-center shadow-sm">
+          <div className="rounded-[2rem] bg-card p-12 text-center shadow-sm">
 
             <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-950" />
 
@@ -336,7 +349,7 @@ export default function AdminDashboard() {
         {!loading &&
           !error &&
           tests.length === 0 && (
-            <div className="rounded-[2rem] bg-white p-12 text-center shadow-sm">
+            <div className="rounded-[2rem] bg-card p-12 text-center shadow-sm">
 
               <h3 className="text-xl font-black text-slate-950">
                 No assessments found
@@ -380,7 +393,7 @@ export default function AdminDashboard() {
                 return (
                   <article
                     key={test.id}
-                    className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    className="rounded-[2rem] border border-black/5 bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
 
                     {/* Card Top */}
@@ -455,7 +468,7 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         onClick={() => openEditDrawer(test)}
-                        className="flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-black text-slate-900 transition hover:-translate-y-0.5 hover:bg-slate-50"
+                        className="flex-1 rounded-xl border border-slate-200 bg-card px-5 py-3.5 text-sm font-black text-slate-900 transition hover:-translate-y-0.5 hover:bg-slate-50"
                       >
                         Edit Details
                       </button>

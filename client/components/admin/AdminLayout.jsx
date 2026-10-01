@@ -24,9 +24,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#f5efe6]">
+    <div className="min-h-screen bg-background">
 
-      <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
 
           <div>
@@ -34,7 +34,7 @@ export default function AdminLayout({
               C Cube Admin
             </p>
 
-            <h1 className="mt-1 font-display text-2xl font-black text-slate-950">
+            <h1 className="mt-1 font-display text-2xl font-black text-foreground">
               {title}
             </h1>
           </div>
@@ -42,7 +42,7 @@ export default function AdminLayout({
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50"
+            className="rounded-xl border border-border px-4 py-2.5 text-sm font-bold text-foreground hover:bg-muted"
           >
             Logout
           </button>

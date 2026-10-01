@@ -837,7 +837,7 @@ export default function AdminAssessment() {
   if (loading) {
 
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f5efe6] text-sm font-bold text-slate-500">
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm font-bold text-muted-foreground">
         Loading assessment...
       </div>
     );
@@ -848,9 +848,9 @@ export default function AdminAssessment() {
   if (!test) {
 
     return (
-      <div className="min-h-screen bg-[#f5efe6] px-6 py-10">
+      <div className="min-h-screen bg-background px-6 py-10">
 
-        <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8">
+        <div className="mx-auto max-w-3xl rounded-2xl bg-card text-card-foreground p-8">
 
           <p className="font-bold text-red-600">
             {error ||
@@ -858,7 +858,7 @@ export default function AdminAssessment() {
           </p>
 
           <button
-            className="mt-6 font-bold text-slate-900"
+            className="mt-6 font-bold text-foreground"
             onClick={() =>
               navigate(
                 "/admin/dashboard"
@@ -878,7 +878,7 @@ export default function AdminAssessment() {
 
   return (
 
-    <div className="min-h-screen bg-[#f5efe6] px-6 py-8 text-slate-950">
+    <div className="min-h-screen bg-background px-6 py-8 text-foreground">
 
       <main className="mx-auto max-w-6xl">
 
@@ -895,7 +895,7 @@ export default function AdminAssessment() {
                   "/admin/dashboard"
                 )
               }
-              className="mb-4 text-sm font-bold text-slate-500 hover:text-slate-950"
+              className="mb-4 text-sm font-bold text-muted-foreground hover:text-foreground"
             >
               ← Back to dashboard
             </button>
@@ -974,7 +974,7 @@ export default function AdminAssessment() {
 
         <form
           onSubmit={saveTest}
-          className="rounded-2xl bg-white p-6 shadow-sm"
+          className="rounded-2xl bg-card text-card-foreground p-6 shadow-sm"
         >
 
           <div className="mb-5 flex items-center justify-between">
@@ -983,7 +983,7 @@ export default function AdminAssessment() {
               Assessment details
             </h2>
 
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase text-slate-500">
+            <span className="rounded-full bg-muted/50 px-3 py-1 text-xs font-black uppercase text-muted-foreground">
               Version {test.version}
             </span>
 
@@ -991,7 +991,7 @@ export default function AdminAssessment() {
 
           <div className="grid gap-5 md:grid-cols-[1fr_220px]">
 
-            <label className="text-sm font-bold text-slate-700">
+            <label className="text-sm font-bold text-foreground">
 
               Title
 
@@ -1009,12 +1009,12 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
               />
 
             </label>
 
-            <label className="text-sm font-bold text-slate-700">
+            <label className="text-sm font-bold text-foreground">
 
               Duration (seconds)
 
@@ -1036,14 +1036,14 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
               />
 
             </label>
 
           </div>
 
-          <label className="mt-5 block text-sm font-bold text-slate-700">
+          <label className="mt-5 block text-sm font-bold text-foreground">
 
             Description
 
@@ -1063,7 +1063,7 @@ export default function AdminAssessment() {
                 })
               }
               rows="3"
-              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+              className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
             />
 
           </label>
@@ -1100,7 +1100,7 @@ export default function AdminAssessment() {
 
             </div>
 
-            <p className="text-sm font-semibold text-slate-500">
+            <p className="text-sm font-semibold text-muted-foreground">
               {sections.length} section
               {sections.length === 1
                 ? ""
@@ -1116,7 +1116,7 @@ export default function AdminAssessment() {
 
             <form
               onSubmit={saveSection}
-              className="mb-6 rounded-2xl border border-dashed border-slate-300 bg-white p-6"
+              className="mb-6 rounded-2xl border border-dashed border-slate-300 bg-card text-card-foreground p-6"
             >
 
               <h3 className="font-black">
@@ -1142,7 +1142,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-slate-200 px-3 py-3"
+                  className="rounded-xl border border-border px-3 py-3"
                 />
 
                 <input
@@ -1158,7 +1158,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-slate-200 px-3 py-3 md:col-span-2"
+                  className="rounded-xl border border-border px-3 py-3 md:col-span-2"
                 />
 
                 <input
@@ -1176,7 +1176,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-slate-200 px-3 py-3"
+                  className="rounded-xl border border-border px-3 py-3"
                 />
 
               </div>
@@ -1193,7 +1193,7 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-4 w-full rounded-xl border border-slate-200 px-3 py-3"
+                className="mt-4 w-full rounded-xl border border-border px-3 py-3"
               />
 
               <div className="mt-4 flex gap-3">
@@ -1224,7 +1224,7 @@ export default function AdminAssessment() {
                         )
                       );
                     }}
-                    className="rounded-xl px-4 py-3 text-sm font-bold text-slate-500"
+                    className="rounded-xl px-4 py-3 text-sm font-bold text-muted-foreground"
                   >
                     Cancel
                   </button>
@@ -1260,7 +1260,7 @@ export default function AdminAssessment() {
 
                   <article
                     key={section.id}
-                    className="rounded-2xl bg-white p-6 shadow-sm"
+                    className="rounded-2xl bg-card text-card-foreground p-6 shadow-sm"
                   >
 
                     <div className="flex flex-wrap items-start justify-between gap-4">
@@ -1276,7 +1276,7 @@ export default function AdminAssessment() {
                           {section.name}
                         </h3>
 
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-muted-foreground">
                           {section.description ||
                             "No description"}{" "}
                           ·{" "}
@@ -1304,7 +1304,7 @@ export default function AdminAssessment() {
                             );
 
                           }}
-                          className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-50"
+                          className="rounded-lg border border-border px-3 py-1.5 text-xs font-black text-muted-foreground hover:bg-muted"
                         >
                           Edit section
                         </button>
@@ -1323,7 +1323,7 @@ export default function AdminAssessment() {
 
                           <div
                             key={question.id}
-                            className="rounded-xl bg-[#f5efe6] p-4"
+                            className="rounded-xl bg-background p-4"
                           >
 
                             <div className="flex flex-wrap justify-between gap-4">
@@ -1347,7 +1347,7 @@ export default function AdminAssessment() {
                                     }
                                   </span>
 
-                                  <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-slate-500">
+                                  <span className="rounded-full bg-card text-card-foreground px-2.5 py-1 text-[11px] font-black text-muted-foreground">
                                     {
                                       question.marks
                                     } mark
@@ -1376,7 +1376,7 @@ export default function AdminAssessment() {
                                           question
                                         )
                                       }
-                                      className="rounded-lg bg-white px-3 py-2 text-xs font-black text-slate-700"
+                                      className="rounded-lg border border-border bg-card text-card-foreground px-3 py-1.5 text-xs font-black text-foreground"
                                     >
                                       Edit
                                     </button>
@@ -1390,7 +1390,7 @@ export default function AdminAssessment() {
                                           question.id
                                         )
                                       }
-                                      className="rounded-lg bg-red-100 px-3 py-2 text-xs font-black text-red-700"
+                                      className="rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 text-xs font-black text-red-600 dark:text-red-400"
                                     >
                                       Delete
                                     </button>
@@ -1410,7 +1410,7 @@ export default function AdminAssessment() {
                                   question.question_image_url
                                 }
                                 alt="Question"
-                                className="mt-4 max-h-64 max-w-full rounded-xl border border-slate-200 object-contain"
+                                className="mt-4 max-h-48 max-w-full rounded-xl border border-border object-contain"
                               />
 
                             )}
@@ -1434,7 +1434,7 @@ export default function AdminAssessment() {
                                         className={`rounded-lg px-3 py-2 text-sm ${
                                           option.is_correct
                                             ? "bg-emerald-100 font-bold text-emerald-800"
-                                            : "bg-white text-slate-600"
+                                            : "bg-card text-card-foreground text-muted-foreground"
                                         }`}
                                       >
                                         {option.option_key}.{" "}
@@ -1507,7 +1507,7 @@ export default function AdminAssessment() {
                                 );
 
                               }}
-                              className="text-sm font-bold text-slate-500"
+                              className="text-sm font-bold text-muted-foreground"
                             >
                               Cancel edit
                             </button>
@@ -1535,7 +1535,7 @@ export default function AdminAssessment() {
                               }
                             )
                           }
-                          className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                          className="mt-4 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
                         />
 
 
@@ -1543,7 +1543,7 @@ export default function AdminAssessment() {
 
                         <div className="mt-4 grid gap-4 md:grid-cols-2">
 
-                          <label className="text-sm font-bold text-slate-700">
+                          <label className="text-sm font-bold text-foreground">
 
                             Answer type
 
@@ -1576,7 +1576,7 @@ export default function AdminAssessment() {
                                 );
 
                               }}
-                              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3"
+                              className="mt-2 w-full rounded-xl border border-border bg-card text-card-foreground px-4 py-3"
                             >
 
                               <option value="mcq">
@@ -1596,7 +1596,7 @@ export default function AdminAssessment() {
                           </label>
 
 
-                          <label className="text-sm font-bold text-slate-700">
+                          <label className="text-sm font-bold text-foreground">
 
                             Marks
 
@@ -1616,7 +1616,7 @@ export default function AdminAssessment() {
                                   }
                                 )
                               }
-                              className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3"
+                              className="mt-2 w-full rounded-xl border border-border px-4 py-3"
                             />
 
                           </label>
@@ -1626,7 +1626,7 @@ export default function AdminAssessment() {
 
                         {/* IMAGE */}
 
-                        <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4">
+                        <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-muted p-4">
 
                           <div className="flex flex-wrap items-center justify-between gap-3">
 
@@ -1636,13 +1636,13 @@ export default function AdminAssessment() {
                                 Add image
                               </p>
 
-                              <p className="mt-1 text-xs text-slate-500">
+                              <p className="mt-1 text-xs text-muted-foreground">
                                 JPG, PNG, WEBP · Maximum 2 MB
                               </p>
 
                             </div>
 
-                            <label className="cursor-pointer rounded-lg bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-sm">
+                            <label className="cursor-pointer rounded-lg bg-card text-card-foreground px-4 py-2 text-sm font-black text-foreground shadow-sm">
 
                               Choose image
 
@@ -1672,7 +1672,7 @@ export default function AdminAssessment() {
                                   questionForm.questionImageUrl
                                 }
                                 alt="Question preview"
-                                className="max-h-64 rounded-xl border border-slate-200 object-contain"
+                                className="max-h-48 rounded-xl border border-border object-contain"
                               />
 
                               <button
@@ -1703,7 +1703,7 @@ export default function AdminAssessment() {
                         {questionForm.questionType ===
                           "mcq" && (
 
-                          <div className="mt-5 rounded-xl border border-slate-200 p-4">
+                          <div className="mt-5 rounded-xl border border-border p-4">
 
                             <div className="flex items-center justify-between">
 
@@ -1713,7 +1713,7 @@ export default function AdminAssessment() {
                                   Options
                                 </p>
 
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted-foreground">
                                   Select exactly one correct answer.
                                 </p>
 
@@ -1806,7 +1806,7 @@ export default function AdminAssessment() {
                                           }
                                         )
                                       }
-                                      className="min-w-0 flex-1 rounded-lg border border-slate-200 px-3 py-2"
+                                      className="min-w-0 flex-1 rounded-lg border border-border px-3 py-2"
                                     />
 
                                     {questionForm.options.length >
@@ -1844,7 +1844,7 @@ export default function AdminAssessment() {
                         {questionForm.questionType ===
                           "short_answer" && (
 
-                          <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="mt-5 rounded-xl border border-border bg-muted p-4">
 
                             <p className="text-sm font-black">
                               Student response
@@ -1853,7 +1853,7 @@ export default function AdminAssessment() {
                             <input
                               disabled
                               placeholder="Short answer"
-                              className="mt-3 w-full rounded-lg border border-slate-200 bg-white px-3 py-2"
+                              className="mt-3 w-full rounded-lg border border-border bg-card text-card-foreground px-3 py-2"
                             />
 
                           </div>
@@ -1866,7 +1866,7 @@ export default function AdminAssessment() {
                         {questionForm.questionType ===
                           "long_answer" && (
 
-                          <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="mt-5 rounded-xl border border-border bg-muted p-4">
 
                             <p className="text-sm font-black">
                               Student response
@@ -1876,7 +1876,7 @@ export default function AdminAssessment() {
                               disabled
                               rows="4"
                               placeholder="Long answer"
-                              className="mt-3 w-full rounded-lg border border-slate-200 bg-white px-3 py-2"
+                              className="mt-3 w-full rounded-lg border border-border bg-card text-card-foreground px-3 py-2"
                             />
 
                           </div>
@@ -1911,7 +1911,7 @@ export default function AdminAssessment() {
 
             {!sections.length && (
 
-              <div className="rounded-2xl bg-white p-10 text-center text-sm font-semibold text-slate-500">
+              <div className="rounded-2xl bg-card text-card-foreground p-10 text-center text-sm font-semibold text-muted-foreground">
                 Add a section to start building this assessment.
               </div>
 
