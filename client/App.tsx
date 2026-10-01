@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { clubInfo, events, coreTeam, navItems } from "./data/clubData";
 import { motion } from "framer-motion";
-import { User, Lightbulb, Globe, ChevronRight, Moon, Sun } from "lucide-react";
+import { User, Lightbulb, Globe, ChevronRight, Moon, Sun, Instagram, Linkedin, Mail } from "lucide-react";
 import ColourfulText from "@/components/ui/colourful-text";
 import { Vortex } from "@/components/ui/vortex";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
@@ -274,8 +274,19 @@ export default function App() {
       </section>
 
       {/* ─── VISION / MISSION ─── */}
-      <section id="vision" className="py-32">
+      <section id="vision" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="text-center mb-16"
+          >
+            <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-3">Our Goal</p>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Vision & Mission</h2>
+          </motion.div>
+
           <motion.div 
             variants={staggerContainer}
             initial="hidden"
@@ -459,9 +470,20 @@ export default function App() {
           <div className="flex flex-col items-center text-center mb-16">
             <img src="/assets/ccubelogo.png" alt="C Cube" className="h-16 w-16 mb-6 object-contain" />
             <h2 className="font-bold text-2xl text-foreground mb-3">C Cube — VIT Pune</h2>
-            <p className="text-base text-muted-foreground max-w-md leading-relaxed">
+            <p className="text-base text-muted-foreground max-w-md leading-relaxed mb-8">
               Empowering students through Character, Competence, and Culture.
             </p>
+            <div className="flex gap-4">
+              <a href="https://www.instagram.com/ccubevitp/" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a href="https://www.linkedin.com/in/c-cube-club-vit-pune-165746439" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a href="mailto:ccube@vit.edu" className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Mail className="h-5 w-5" />
+              </a>
+            </div>
           </div>
           
           <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
