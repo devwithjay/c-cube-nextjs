@@ -11,10 +11,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import {
   getAdminTest,
-  getAdminTestResults
+  getAdminTestResults,
+  getTestSections
 } from "../../services/adminApi.js";
 
-const columns = [
+const baseColumns = [
   ["name", "Name"],
   ["college_email", "Email"],
   ["mobile_number", "Mobile"],
@@ -25,18 +26,16 @@ const columns = [
   ["living_at", "Living at"],
   ["total_score", "Score"],
   ["total_questions", "Total"],
-  ["attempted_questions", "Attempted"],
-  ["section1_score", "IQ"],
-  ["section2_score", "EQ"],
-  ["section3_score", "SQ"],
-  ["submitted_at", "Submitted at"]
+  ["attempted_questions", "Attempted"]
 ];
 
 export default function AdminResults() {
   const navigate = useNavigate();
   const { testId } = useParams();
   const [test, setTest] = useState(null);
+  const [sections, setSections] = useState([]);
   const [results, setResults] = useState([]);
+  const [dynamicColumns, setDynamicColumns] = useState(baseColumns);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedResult, setSelectedResult] = useState(null);
@@ -46,12 +45,27 @@ export default function AdminResults() {
     async function loadResults() {
       try {
         setLoading(true);
-        const [testResponse, resultsResponse] = await Promise.all([
+        const [testResponse, resultsResponse, sectionsResponse] = await Promise.all([
           getAdminTest(testId),
-          getAdminTestResults(testId)
+          getAdminTestResults(testId),
+          getTestSections(testId)
         ]);
         setTest(testResponse?.data || null);
         setResults(Array.isArray(resultsResponse?.data) ? resultsResponse.data : []);
+        
+        const fetchedSections = Array.isArray(sectionsResponse?.data) ? sectionsResponse.data : [];
+        setSections(fetchedSections);
+        
+        // Build dynamic columns based on sections
+        const dynamicCols = [...baseColumns];
+        fetchedSections.forEach(sec => {
+          const sNum = Number(sec.section_number);
+          if (sNum === 1) dynamicCols.push(["section1_score", sec.name]);
+          else if (sNum === 2) dynamicCols.push(["section2_score", sec.name]);
+          else if (sNum === 3) dynamicCols.push(["section3_score", sec.name]);
+        });
+        dynamicCols.push(["submitted_at", "Submitted at"]);
+        setDynamicColumns(dynamicCols);
       } catch (requestError) {
         setError(requestError?.message || "Unable to load responses.");
       } finally {
@@ -63,9 +77,9 @@ export default function AdminResults() {
   }, [testId]);
 
   function exportToExcel() {
-    const header = columns.map(([, label]) => label);
+    const header = dynamicColumns.map(([, label]) => label);
     const rows = results.map((result) =>
-      columns.map(([key]) => result[key] ?? "")
+      dynamicColumns.map(([key]) => result[key] ?? "")
     );
     const csv = [header, ...rows]
       .map((row) => row.map(escapeCsv).join(","))
@@ -106,7 +120,7 @@ export default function AdminResults() {
 
       {!error && !results.length && <div className="mt-8 rounded-2xl bg-card p-12 text-center shadow-sm"><h2 className="text-xl font-black">No submitted responses yet</h2><p className="mt-2 text-sm text-muted-foreground">Responses will appear here after participants submit the assessment.</p></div>}
 
-      {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-slate-950 text-xs font-black uppercase tracking-[0.08em] text-foreground"><tr>{columns.map(([, label]) => <th key={label} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result) => <tr key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{columns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
+      {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([, label]) => <th key={label} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result) => <tr key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
 
       <Dialog open={!!selectedResult} onOpenChange={(open) => !open && setSelectedResult(null)}>
         <DialogContent className="max-w-2xl bg-card text-card-foreground border-border max-h-[90vh] overflow-y-auto">
@@ -133,25 +147,28 @@ export default function AdminResults() {
               </div>
               
               <div className="col-span-1 md:col-span-2 space-y-4 mt-2">
-                <h3 className="font-bold text-lg border-b border-border pb-2 text-primary">Test Scores</h3>
+                                <h3 className="font-bold text-lg border-b border-border pb-2 text-primary">Test Scores</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="bg-muted rounded-xl p-4 text-center">
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Total Score</span>
                     <span className="text-2xl font-black text-foreground">{selectedResult.total_score}</span>
                   </div>
-                  <div className="bg-muted rounded-xl p-4 text-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">IQ</span>
-                    <span className="text-2xl font-black text-foreground">{selectedResult.section1_score}</span>
-                  </div>
-                  <div className="bg-muted rounded-xl p-4 text-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">EQ</span>
-                    <span className="text-2xl font-black text-foreground">{selectedResult.section2_score}</span>
-                  </div>
-                  <div className="bg-muted rounded-xl p-4 text-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">SQ</span>
-                    <span className="text-2xl font-black text-foreground">{selectedResult.section3_score}</span>
-                  </div>
+                  {sections.map(sec => {
+                    let scoreKey = null;
+                    const sNum = Number(sec.section_number);
+                    if (sNum === 1) scoreKey = "section1_score";
+                    else if (sNum === 2) scoreKey = "section2_score";
+                    else if (sNum === 3) scoreKey = "section3_score";
+                    if (!scoreKey) return null;
+                    return (
+                      <div key={sec.id} className="bg-muted rounded-xl p-4 text-center">
+                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">{sec.name}</span>
+                        <span className="text-2xl font-black text-foreground">{selectedResult[scoreKey]}</span>
+                      </div>
+                    );
+                  })}
                 </div>
+              </div>
               </div>
             </div>
           )}
