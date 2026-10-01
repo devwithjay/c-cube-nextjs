@@ -1032,7 +1032,7 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
               />
 
             </label>
@@ -1059,7 +1059,7 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
               />
 
             </label>
@@ -1086,7 +1086,7 @@ export default function AdminAssessment() {
                 })
               }
               rows="3"
-              className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+              className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
             />
 
           </label>
@@ -1165,7 +1165,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-border px-3 py-3"
+                  className="rounded-xl border border-border px-3 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                 />
 
                 <input
@@ -1181,7 +1181,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-border px-3 py-3 md:col-span-2"
+                  className="rounded-xl border border-border px-3 py-3 md:col-span-2 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                 />
 
                 <input
@@ -1199,7 +1199,7 @@ export default function AdminAssessment() {
                         event.target.value
                     })
                   }
-                  className="rounded-xl border border-border px-3 py-3"
+                  className="rounded-xl border border-border px-3 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                 />
 
               </div>
@@ -1216,7 +1216,7 @@ export default function AdminAssessment() {
                       event.target.value
                   })
                 }
-                className="mt-4 w-full rounded-xl border border-border px-3 py-3"
+                className="mt-4 w-full rounded-xl border border-border px-3 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
               />
 
               <div className="mt-4 flex gap-3">
@@ -1558,7 +1558,7 @@ export default function AdminAssessment() {
                               }
                             )
                           }
-                          className="mt-4 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                          className="mt-4 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                         />
 
 
@@ -1619,7 +1619,7 @@ export default function AdminAssessment() {
                                   }
                                 )
                               }
-                              className="mt-2 w-full rounded-xl border border-border px-4 py-3"
+                              className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                             />
 
                           </label>

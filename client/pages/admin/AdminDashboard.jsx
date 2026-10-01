@@ -270,7 +270,7 @@ export default function AdminDashboard() {
                       required
                       value={createForm.title}
                       onChange={(event) => setCreateForm({ ...createForm, title: event.target.value })}
-                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                     />
                   </label>
                   <label className="text-sm font-bold text-foreground">
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
                       type="number"
                       value={createForm.durationSeconds}
                       onChange={(event) => setCreateForm({ ...createForm, durationSeconds: event.target.value })}
-                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                     />
                   </label>
                 </div>
@@ -292,7 +292,7 @@ export default function AdminDashboard() {
                     value={createForm.liveMessage}
                     onChange={(event) => setCreateForm({ ...createForm, liveMessage: event.target.value })}
                     placeholder="e.g. Assessment will be live on 2nd of October, from 6 AM to 11 PM"
-                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                   />
                 </label>
                 <label className="text-sm font-bold text-foreground">
@@ -301,7 +301,7 @@ export default function AdminDashboard() {
                     rows="3"
                     value={createForm.description}
                     onChange={(event) => setCreateForm({ ...createForm, description: event.target.value })}
-                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
+                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                   />
                 </label>
                 <DrawerFooter className="px-0">
