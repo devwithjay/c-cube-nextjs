@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import {
@@ -122,6 +124,7 @@ export default function AdminAssessment() {
 
   const navigate = useNavigate();
   const { testId } = useParams();
+  const { theme, setTheme } = useTheme();
 
   const [test, setTest] = useState(null);
   const [sections, setSections] = useState([]);
@@ -922,7 +925,13 @@ export default function AdminAssessment() {
           </div>
 
           <div className="flex gap-3">
-
+            <button
+              type="button"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-xl border border-border bg-card p-3 text-card-foreground transition hover:bg-muted"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
             {isDraft && (
 
               <button

@@ -297,11 +297,7 @@ export async function findResultsByTestId(
       p.college_email,
       p.mobile_number,
       p.campus,
-      p.class_name,
-      p.current_year,
-      p.gender,
-      p.staying_at,
-      p.current_city
+      p.living_at
     FROM three_q_results r
     INNER JOIN three_q_sessions s
       ON s.id = r.session_id
