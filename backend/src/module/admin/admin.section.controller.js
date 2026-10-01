@@ -73,8 +73,7 @@ export async function updateSection(req, res, next) {
       });
     }
 
-    const section = await updateTestSection,
-  deleteTestSection(
+    const section = await updateTestSection(
       sectionId,
       req.body
     );
