@@ -929,25 +929,30 @@ export default function GiveTest() {
   if (!assessment || assessment.status !== "published") {
     return (
       <Shell>
-        <div className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-2xl">
-            !
+        <div className="flex flex-col items-center justify-center text-center py-12">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10 text-primary shadow-sm mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
           </div>
 
-          <h1 className="mt-5 text-2xl font-black text-slate-950">
-            {assessment ? "Assessment Not Active Yet" : "Assessment unavailable"}
+          <h1 className="mt-2 text-3xl font-black text-slate-950 md:text-4xl">
+            Assessment Not Active Yet
           </h1>
 
-          <p className="mt-3 text-slate-600 max-w-lg mx-auto">
-            {assessment?.status === "draft" && assessment?.live_message
-              ? assessment.live_message
-              : error || "No assessment is currently available."}
-          </p>
+          <div className="mt-6 max-w-lg rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+            <p className="text-lg font-medium leading-relaxed text-slate-700">
+              {assessment?.status === "draft" && assessment?.live_message
+                ? assessment.live_message
+                : "The test will begin tomorrow on 2nd of October from 6 PM to 11 PM."}
+            </p>
+          </div>
 
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="mt-7 rounded-xl bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+            className="mt-10 rounded-full bg-slate-950 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-slate-800 hover:-translate-y-0.5 shadow-lg shadow-slate-900/20"
           >
             Return to website
           </button>
