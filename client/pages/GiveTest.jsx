@@ -1030,26 +1030,14 @@ export default function GiveTest() {
           </p>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
-          <div className="flex gap-3">
-            <div className="mt-0.5 text-lg">
-              ⓘ
-            </div>
-
-            <div>
-              <p className="font-black text-emerald-900">
-                Before you begin
-              </p>
-
-              <p className="mt-1 text-sm leading-6 text-emerald-800">
-                Please make sure your details
-                are correct. Once the assessment
-                starts, the timer will begin
-                immediately.
-              </p>
-            </div>
-          </div>
-        </div>
+        <Alert className="mt-8 border-emerald-200 bg-emerald-50/50 text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-900/20 dark:text-emerald-500">
+          <AlertTitle className="font-black flex items-center gap-2">
+            <span className="text-lg">ⓘ</span> Before you begin
+          </AlertTitle>
+          <AlertDescription className="mt-1 text-emerald-800 dark:text-emerald-400">
+            Please make sure your details are correct. Once the assessment starts, the timer will begin immediately.
+          </AlertDescription>
+        </Alert>
 
         <form
           onSubmit={handleStart}
@@ -1095,64 +1083,26 @@ export default function GiveTest() {
             label="Branch"
             required
           >
-            <select
-              required
-              value={participant.branch}
-              onChange={(event) =>
-                updateParticipant(
-                  "branch",
-                  event.target.value
-                )
-              }
-              className={selectClass}
-            >
-              <option value="">
-                Select your branch
-              </option>
-
-              {BRANCHES.map(
-                (branch) => (
-                  <option
-                    key={branch}
-                    value={branch}
-                  >
-                    {branch}
-                  </option>
-                )
-              )}
-            </select>
+            <Select value={participant.branch} onValueChange={(value) => updateParticipant("branch", value)} required>
+              <SelectTrigger className={selectClass}>
+                <SelectValue placeholder="Select your branch" />
+              </SelectTrigger>
+              <SelectContent>
+              </SelectContent>
+            </Select>
           </FormField>
 
           <FormField
             label="Division"
             required
           >
-            <select
-              required
-              value={participant.division}
-              onChange={(event) =>
-                updateParticipant(
-                  "division",
-                  event.target.value
-                )
-              }
-              className={selectClass}
-            >
-              <option value="">
-                Select division
-              </option>
-
-              {DIVISIONS.map(
-                (division) => (
-                  <option
-                    key={division}
-                    value={division}
-                  >
-                    Division {division}
-                  </option>
-                )
-              )}
-            </select>
+            <Select value={participant.division} onValueChange={(value) => updateParticipant("division", value)} required>
+              <SelectTrigger className={selectClass}>
+                <SelectValue placeholder="Select division" />
+              </SelectTrigger>
+              <SelectContent>
+              </SelectContent>
+            </Select>
           </FormField>
 
           <FormField
@@ -1207,85 +1157,41 @@ export default function GiveTest() {
             label="Campus"
             required
           >
-            <select
-              required
-              value={participant.campus}
-              onChange={(event) =>
-                updateParticipant(
-                  "campus",
-                  event.target.value
-                )
-              }
-              className={selectClass}
-            >
-              <option value="">
-                Select campus
-              </option>
-
-              {CAMPUSES.map(
-                (campus) => (
-                  <option
-                    key={campus}
-                    value={campus}
-                  >
-                    {campus}
-                  </option>
-                )
-              )}
-            </select>
+            <Select value={participant.campus} onValueChange={(value) => updateParticipant("campus", value)} required>
+              <SelectTrigger className={selectClass}>
+                <SelectValue placeholder="Select campus" />
+              </SelectTrigger>
+              <SelectContent>
+              </SelectContent>
+            </Select>
           </FormField>
 
           <FormField
             label="Living at"
             required
           >
-            <select
-              required
-              value={participant.livingAt}
-              onChange={(event) =>
-                updateParticipant(
-                  "livingAt",
-                  event.target.value
-                )
-              }
-              className={selectClass}
-            >
-              <option value="">
-                Select where you live
-              </option>
-
-              {LIVING_OPTIONS.map(
-                (option) => (
-                  <option
-                    key={option}
-                    value={option}
-                  >
-                    {option}
-                  </option>
-                )
-              )}
-            </select>
+            <Select value={participant.livingAt} onValueChange={(value) => updateParticipant("livingAt", value)} required>
+              <SelectTrigger className={selectClass}>
+                <SelectValue placeholder="Select where you live" />
+              </SelectTrigger>
+              <SelectContent>
+              </SelectContent>
+            </Select>
           </FormField>
 
           <FormField
             label="Gender"
             required
           >
-            <select
-              required
-              value={participant.gender}
-              onChange={(event) =>
-                updateParticipant(
-                  "gender",
-                  event.target.value
-                )
-              }
-              className={selectClass}
-            >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+            <Select value={participant.gender} onValueChange={(value) => updateParticipant("gender", value)} required>
+              <SelectTrigger className={selectClass}>
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+              </SelectContent>
+            </Select>
           </FormField>
 
           {error && (
@@ -1501,7 +1407,7 @@ export default function GiveTest() {
                       ? "bg-primary text-primary-foreground"
                       : disabled
                         ? "cursor-not-allowed bg-muted text-slate-300"
-                        : "bg-card text-muted-foreground ring-1 ring-slate-200 hover:bg-muted/50"
+                        : "border border-border bg-card text-muted-foreground hover:bg-muted/50"
                     }`}
                 >
                   {section.name}
@@ -1526,7 +1432,7 @@ export default function GiveTest() {
 
       {currentSection &&
         currentQuestions.length > 0 && (
-          <div className="mt-4 rounded-2xl border border-slate-100 bg-card p-4">
+          <div className="mt-4 rounded-2xl border border-border bg-card p-4">
             <div className="flex flex-wrap gap-2">
               {currentQuestions.map(
                 (
@@ -1607,7 +1513,7 @@ export default function GiveTest() {
             </h2>
 
             {currentQuestion.questionImageUrl && (
-              <div className="mt-6 flex justify-center rounded-2xl border border-slate-100 bg-muted/50 p-4 sm:p-6">
+              <div className="mt-6 flex justify-center">
                 <img
                   src={
                     currentQuestion.questionImageUrl

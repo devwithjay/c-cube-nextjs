@@ -35,6 +35,8 @@ export default function AdminDashboard() {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const { toast } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingTestId, setEditingTestId] = useState(null);
   const [createForm, setCreateForm] = useState({
@@ -512,7 +514,7 @@ export default function AdminDashboard() {
                           onClick={() => {
                             const link = `${window.location.origin}/give-test/${test.id}`;
                             navigator.clipboard.writeText(link);
-                            alert("Link copied to clipboard: " + link);
+                            toast({ title: "Copied!", description: "Link copied to clipboard." });
                           }}
                           className="rounded-xl bg-blue-100 px-4 py-3 text-xs font-bold text-blue-700 transition hover:bg-blue-200"
                           title="Copy Public Link"

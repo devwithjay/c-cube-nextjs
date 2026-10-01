@@ -1562,51 +1562,31 @@ export default function AdminAssessment() {
 
                             Answer type
 
-                            <select
+                            <Select
                               value={
                                 questionForm.questionType
                               }
-                              onChange={(event) => {
-
-                                const type =
-                                  event.target.value;
-
+                              onValueChange={(type) => {
                                 updateQuestionForm(
                                   section.id,
                                   {
-                                    questionType:
-                                      type,
-
-                                    options:
-                                      type === "mcq"
-                                        ? (
-                                            questionForm
-                                              .options
-                                              ?.length >= 2
-                                              ? questionForm.options
-                                              : getEmptyQuestion().options
-                                          )
-                                        : []
+                                    questionType: type,
+                                    options: type === "mcq"
+                                      ? (questionForm.options?.length >= 2 ? questionForm.options : getEmptyQuestion().options)
+                                      : []
                                   }
                                 );
-
                               }}
-                              className="mt-2 w-full rounded-xl border border-border bg-background text-foreground px-4 py-3"
                             >
-
-                              <option value="mcq">
-                                Multiple Choice
-                              </option>
-
-                              <option value="short_answer">
-                                Short Answer
-                              </option>
-
-                              <option value="long_answer">
-                                Long Answer
-                              </option>
-
-                            </select>
+                              <SelectTrigger className="mt-2 w-full rounded-xl border border-border bg-background text-foreground px-4 py-3 h-auto text-base">
+                                <SelectValue placeholder="Answer type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="mcq">Multiple Choice</SelectItem>
+                                <SelectItem value="short_answer">Short Answer</SelectItem>
+                                <SelectItem value="long_answer">Long Answer</SelectItem>
+                              </SelectContent>
+                            </Select>
 
                           </label>
 
