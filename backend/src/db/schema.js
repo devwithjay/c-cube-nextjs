@@ -174,6 +174,8 @@ export async function initializeDatabase() {
       description TEXT,
 
       duration_seconds INTEGER NOT NULL,
+      
+      live_message TEXT,
 
       status TEXT NOT NULL
         CHECK (
@@ -528,6 +530,9 @@ export async function initializeDatabase() {
 
     ALTER TABLE three_q_participants
       ADD COLUMN IF NOT EXISTS living_at TEXT;
+
+    ALTER TABLE three_q_tests
+      ADD COLUMN IF NOT EXISTS live_message TEXT;
 
 
     /* ============================================================

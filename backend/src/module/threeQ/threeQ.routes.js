@@ -9,7 +9,8 @@ import {
   saveSessionAnswersBatch,
   submitSession,
   getSessionResult,
-  requestRetest
+  requestRetest,
+  getTestByIdPublic
 } from "./threeQ.controller.js";
 
 
@@ -26,6 +27,17 @@ const router =
 router.get(
   "/current",
   getCurrentTest
+);
+
+/*
+|--------------------------------------------------------------------------
+| GET SPECIFIC 3Q TEST
+|--------------------------------------------------------------------------
+*/
+
+router.get(
+  "/tests/:testId",
+  getTestByIdPublic
 );
 
 

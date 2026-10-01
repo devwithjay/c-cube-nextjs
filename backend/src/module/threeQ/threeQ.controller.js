@@ -876,3 +876,14 @@ export async function requestRetest(
     next(error);
   }
 }
+import { findTestById } from "../admin/admin.test.repository.js";
+
+export async function getTestByIdPublic(req, res, next) {
+  try {
+    const testId = req.params.testId;
+    const test = await findTestById(testId);
+    return res.status(200).json({ success: true, data: test });
+  } catch (error) {
+    next(error);
+  }
+}

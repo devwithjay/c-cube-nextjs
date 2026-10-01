@@ -88,16 +88,18 @@ export async function createTest(
         title,
         description,
         duration_seconds,
+        live_message,
         status,
         version
       )
 
-      VALUES (?, ?, ?, 'draft', ?)
+      VALUES (?, ?, ?, ?, 'draft', ?)
       `,
       [
         test.title,
         test.description,
         test.durationSeconds,
+        test.liveMessage || "Assessment will be live shortly.",
         test.version
       ]
     );
@@ -129,6 +131,7 @@ export async function updateTest(
       title = ?,
       description = ?,
       duration_seconds = ?,
+      live_message = ?,
       updated_at = CURRENT_TIMESTAMP
 
     WHERE id = ?
@@ -139,6 +142,7 @@ export async function updateTest(
       test.title,
       test.description,
       test.durationSeconds,
+      test.liveMessage || "Assessment will be live shortly.",
       testId
     ]
   );
