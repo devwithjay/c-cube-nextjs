@@ -61,10 +61,14 @@ function toPositiveNumber(value, fallback) {
 |--------------------------------------------------------------------------
 */
 
+const isServerless =
+  !!process.env.VERCEL ||
+  !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+
 const poolMax = toPositiveNumber(
   databaseConfig.poolMax ||
     process.env.DB_POOL_MAX,
-  60
+  isServerless ? 5 : 60
 );
 
 const poolMin = Math.max(

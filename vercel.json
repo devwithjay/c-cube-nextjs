@@ -1,28 +1,8 @@
 {
-  "services": {
-    "frontend": {
-      "root": ".",
-      "framework": "nextjs"
-    },
-    "backend": {
-      "root": "backend",
-      "entrypoint": "src/server.js"
+  "framework": "nextjs",
+  "functions": {
+    "pages/api/**/*.js": {
+      "maxDuration": 30
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/backend(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
-    }
-  ]
+  }
 }
