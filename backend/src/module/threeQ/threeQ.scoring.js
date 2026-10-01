@@ -22,178 +22,54 @@
 
 export function calculateThreeQScore(
   answers = [],
-  totalQuestions = 0
+  totalQuestions = 0,
+  sections = []
 ) {
-
-  /*
-  |--------------------------------------------------------------------------
-  | Initialize scores
-  |--------------------------------------------------------------------------
-  */
-
   let totalScore = 0;
-
   let section1Score = 0;
-
   let section2Score = 0;
-
   let section3Score = 0;
 
+  const attemptedQuestions = answers.length;
 
-  /*
-  |--------------------------------------------------------------------------
-  | Count attempted questions
-  |--------------------------------------------------------------------------
-  |
-  | Every answer row represents an attempted question.
-  |
-  |--------------------------------------------------------------------------
-  */
+  // Sort sections to determine the first 3 sections reliably (by sort_order or section_number)
+  const sortedSections = [...sections].sort((a, b) => 
+    (a.sort_order ?? a.section_number) - (b.sort_order ?? b.section_number)
+  );
+  
+  const section1Num = sortedSections.length > 0 ? Number(sortedSections[0].section_number) : 1;
+  const section2Num = sortedSections.length > 1 ? Number(sortedSections[1].section_number) : 2;
+  const section3Num = sortedSections.length > 2 ? Number(sortedSections[2].section_number) : 3;
 
-  const attemptedQuestions =
-    answers.length;
+  for (const answer of answers) {
+    const questionType = String(answer.question_type || "mcq").toLowerCase();
+    if (questionType !== "mcq") continue;
 
+    const isCorrect = Number(answer.is_correct) === 1 || answer.is_correct === true;
+    if (!isCorrect) continue;
 
-  /*
-  |--------------------------------------------------------------------------
-  | Calculate score
-  |--------------------------------------------------------------------------
-  */
+    const marks = Number(answer.marks || 0);
+    totalScore += marks;
 
-  for (
-    const answer of answers
-  ) {
+    const sectionNumber = Number(answer.section_number);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Normalize question type
-    |--------------------------------------------------------------------------
-    */
-
-    const questionType =
-      String(
-        answer.question_type || "mcq"
-      ).toLowerCase();
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Only MCQ can be automatically scored
-    |--------------------------------------------------------------------------
-    */
-
-    if (
-      questionType !== "mcq"
-    ) {
-
-      continue;
-
+    if (sectionNumber === section1Num) {
+      section1Score += marks;
+    } else if (sectionNumber === section2Num) {
+      section2Score += marks;
+    } else if (sectionNumber === section3Num) {
+      section3Score += marks;
     }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Check correctness
-    |--------------------------------------------------------------------------
-    */
-
-    const isCorrect =
-      Number(answer.is_correct) === 1 ||
-      answer.is_correct === true;
-
-
-    if (!isCorrect) {
-
-      continue;
-
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Question marks
-    |--------------------------------------------------------------------------
-    */
-
-    const marks =
-      Number(
-        answer.marks || 0
-      );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Add total score
-    |--------------------------------------------------------------------------
-    */
-
-    totalScore +=
-      marks;
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Add section-wise score
-    |--------------------------------------------------------------------------
-    */
-
-    const sectionNumber =
-      Number(
-        answer.section_number
-      );
-
-
-    if (
-      sectionNumber === 1
-    ) {
-
-      section1Score +=
-        marks;
-
-    }
-
-    else if (
-      sectionNumber === 2
-    ) {
-
-      section2Score +=
-        marks;
-
-    }
-
-    else if (
-      sectionNumber === 3
-    ) {
-
-      section3Score +=
-        marks;
-
-    }
-
   }
 
-
-  /*
-  |--------------------------------------------------------------------------
-  | Return score
-  |--------------------------------------------------------------------------
-  */
-
   return {
-
-    totalQuestions:
-      Number(totalQuestions),
-
+    totalQuestions: Number(totalQuestions),
     attemptedQuestions,
-
     totalScore,
-
     section1Score,
-
     section2Score,
-
     section3Score
-
   };
-
 }
+
+

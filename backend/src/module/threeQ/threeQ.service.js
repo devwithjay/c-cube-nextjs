@@ -1682,7 +1682,8 @@ export async function submitTest(
   const score =
     calculateThreeQScore(
       answers,
-      totalQuestions
+      totalQuestions,
+      sections
     );
 
   const submittedAt =

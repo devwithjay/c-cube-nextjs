@@ -58,12 +58,14 @@ export default function AdminResults() {
         
         // Build dynamic columns based on sections
         const dynamicCols = [...baseColumns];
-        fetchedSections.forEach(sec => {
-          const sNum = Number(sec.section_number);
-          if (sNum === 1) dynamicCols.push(["section1_score", sec.name]);
-          else if (sNum === 2) dynamicCols.push(["section2_score", sec.name]);
-          else if (sNum === 3) dynamicCols.push(["section3_score", sec.name]);
-        });
+        const sortedSections = [...fetchedSections].sort((a, b) => 
+          (a.sort_order ?? a.section_number) - (b.sort_order ?? b.section_number)
+        );
+
+        if (sortedSections.length > 0) dynamicCols.push(["section1_score", sortedSections[0].name]);
+        if (sortedSections.length > 1) dynamicCols.push(["section2_score", sortedSections[1].name]);
+        if (sortedSections.length > 2) dynamicCols.push(["section3_score", sortedSections[2].name]);
+
         dynamicCols.push(["submitted_at", "Submitted at"]);
         setDynamicColumns(dynamicCols);
       } catch (requestError) {
