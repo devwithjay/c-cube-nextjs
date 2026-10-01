@@ -122,7 +122,7 @@ export default function AdminResults() {
 
       {!error && !results.length && <div className="mt-8 rounded-2xl bg-card p-12 text-center shadow-sm"><h2 className="text-xl font-black">No submitted responses yet</h2><p className="mt-2 text-sm text-muted-foreground">Responses will appear here after participants submit the assessment.</p></div>}
 
-      {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([, label]) => <th key={label} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result) => <tr key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
+      {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([key, label]) => <th key={key} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result) => <tr key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
 
       <Dialog open={!!selectedResult} onOpenChange={(open) => !open && setSelectedResult(null)}>
         <DialogContent className="max-w-2xl bg-card text-card-foreground border-border max-h-[90vh] overflow-y-auto">
@@ -155,20 +155,16 @@ export default function AdminResults() {
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Total Score</span>
                     <span className="text-2xl font-black text-foreground">{selectedResult.total_score}</span>
                   </div>
-                  {sections.map(sec => {
-                    let scoreKey = null;
-                    const sNum = Number(sec.section_number);
-                    if (sNum === 1) scoreKey = "section1_score";
-                    else if (sNum === 2) scoreKey = "section2_score";
-                    else if (sNum === 3) scoreKey = "section3_score";
-                    if (!scoreKey) return null;
-                    return (
+                  {(() => {
+                    const sorted = [...sections].sort((a, b) => (a.sort_order ?? a.section_number) - (b.sort_order ?? b.section_number));
+                    const scoreKeys = ["section1_score", "section2_score", "section3_score"];
+                    return sorted.slice(0, 3).map((sec, i) => (
                       <div key={sec.id} className="bg-muted rounded-xl p-4 text-center">
                         <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">{sec.name}</span>
-                        <span className="text-2xl font-black text-foreground">{selectedResult[scoreKey]}</span>
+                        <span className="text-2xl font-black text-foreground">{selectedResult[scoreKeys[i]]}</span>
                       </div>
-                    );
-                  })}
+                    ));
+                  })()}
                 </div>
               </div>
             </div>

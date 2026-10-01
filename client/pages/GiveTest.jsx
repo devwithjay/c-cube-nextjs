@@ -1100,6 +1100,7 @@ export default function GiveTest() {
                 <SelectValue placeholder="Select your branch" />
               </SelectTrigger>
               <SelectContent>
+                {BRANCHES.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
               </SelectContent>
             </Select>
           </FormField>
@@ -1113,6 +1114,7 @@ export default function GiveTest() {
                 <SelectValue placeholder="Select division" />
               </SelectTrigger>
               <SelectContent>
+                {DIVISIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
               </SelectContent>
             </Select>
           </FormField>
@@ -1174,6 +1176,7 @@ export default function GiveTest() {
                 <SelectValue placeholder="Select campus" />
               </SelectTrigger>
               <SelectContent>
+                {CAMPUSES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
               </SelectContent>
             </Select>
           </FormField>
@@ -1187,6 +1190,7 @@ export default function GiveTest() {
                 <SelectValue placeholder="Select where you live" />
               </SelectTrigger>
               <SelectContent>
+                {LIVING_OPTIONS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}
               </SelectContent>
             </Select>
           </FormField>
