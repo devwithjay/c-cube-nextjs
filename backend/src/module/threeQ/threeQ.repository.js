@@ -84,9 +84,10 @@ export async function createParticipant(
           college_email,
           mobile_number,
           campus,
-          living_at
+          living_at,
+          gender
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         participant.name,
@@ -97,6 +98,7 @@ export async function createParticipant(
         participant.mobileNumber,
         participant.campus,
         participant.livingAt,
+        participant.gender || '',
       ]
     );
 

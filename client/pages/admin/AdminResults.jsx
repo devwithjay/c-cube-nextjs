@@ -24,6 +24,7 @@ const baseColumns = [
   ["branch", "Branch"],
   ["division", "Division"],
   ["living_at", "Living at"],
+  ["gender", "Gender"],
   ["total_score", "Score"],
   ["total_questions", "Total"],
   ["attempted_questions", "Attempted"]

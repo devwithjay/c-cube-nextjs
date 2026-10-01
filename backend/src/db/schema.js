@@ -342,6 +342,8 @@ export async function initializeDatabase() {
 
       living_at TEXT NOT NULL,
 
+      gender TEXT NOT NULL DEFAULT '',
+
       created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
       updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -785,6 +787,14 @@ export async function initializeDatabase() {
 
     ALTER TABLE three_q_participants
       ALTER COLUMN living_at SET NOT NULL;
+
+
+    /* ============================================================
+       GENDER COLUMN MIGRATION
+       ============================================================ */
+
+    ALTER TABLE three_q_participants
+      ADD COLUMN IF NOT EXISTS gender TEXT NOT NULL DEFAULT '';
 
 
     /* ============================================================
