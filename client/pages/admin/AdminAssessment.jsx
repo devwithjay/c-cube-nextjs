@@ -924,7 +924,7 @@ export default function AdminAssessment() {
                     "Assessment published."
                   )
                 }
-                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-primary-foreground hover:bg-emerald-700 disabled:opacity-50"
               >
                 Publish assessment
               </button>
@@ -943,7 +943,7 @@ export default function AdminAssessment() {
                     "Assessment closed."
                   )
                 }
-                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-white hover:bg-red-700 disabled:opacity-50"
+                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-primary-foreground hover:bg-red-700 disabled:opacity-50"
               >
                 Close assessment
               </button>
@@ -1072,7 +1072,7 @@ export default function AdminAssessment() {
 
             <button
               disabled={saving}
-              className="mt-5 rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 disabled:opacity-50"
+              className="mt-5 rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground hover:bg-primary disabled:opacity-50"
             >
               Save details
             </button>
@@ -1116,7 +1116,7 @@ export default function AdminAssessment() {
 
             <form
               onSubmit={saveSection}
-              className="mb-6 rounded-2xl border border-dashed border-slate-300 bg-card text-card-foreground p-6"
+              className="mb-6 rounded-2xl border border-dashed border-border bg-card text-card-foreground p-6"
             >
 
               <h3 className="font-black">
@@ -1200,7 +1200,7 @@ export default function AdminAssessment() {
 
                 <button
                   disabled={saving}
-                  className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white disabled:opacity-50"
+                  className="rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground disabled:opacity-50"
                 >
                   {editingSectionId
                     ? "Update section"
@@ -1341,7 +1341,7 @@ export default function AdminAssessment() {
 
                                 <div className="mt-2 flex flex-wrap gap-2">
 
-                                  <span className="rounded-full bg-slate-900 px-2.5 py-1 text-[11px] font-black uppercase text-white">
+                                  <span className="rounded-full bg-primary px-2.5 py-1 text-[11px] font-black uppercase text-primary-foreground">
                                     {
                                       question.question_type
                                     }
@@ -1576,7 +1576,7 @@ export default function AdminAssessment() {
                                 );
 
                               }}
-                              className="mt-2 w-full rounded-xl border border-border bg-card text-card-foreground px-4 py-3"
+                              className="mt-2 w-full rounded-xl border border-border bg-background text-foreground px-4 py-3"
                             >
 
                               <option value="mcq">
@@ -1626,7 +1626,7 @@ export default function AdminAssessment() {
 
                         {/* IMAGE */}
 
-                        <div className="mt-5 rounded-xl border border-dashed border-slate-300 bg-muted p-4">
+                        <div className="mt-5 rounded-xl border border-dashed border-border bg-muted p-4">
 
                           <div className="flex flex-wrap items-center justify-between gap-3">
 
@@ -1730,7 +1730,7 @@ export default function AdminAssessment() {
                                     section.id
                                   )
                                 }
-                                className="rounded-lg bg-slate-950 px-3 py-2 text-xs font-black text-white disabled:opacity-40"
+                                className="rounded-lg bg-primary px-3 py-2 text-xs font-black text-primary-foreground disabled:opacity-40"
                               >
                                 + Add option
                               </button>
@@ -1888,7 +1888,7 @@ export default function AdminAssessment() {
 
                           <button
                             disabled={saving}
-                            className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white hover:bg-slate-800 disabled:opacity-50"
+                            className="rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground hover:bg-primary disabled:opacity-50"
                           >
                             {editingQuestionId
                               ? "Update question"

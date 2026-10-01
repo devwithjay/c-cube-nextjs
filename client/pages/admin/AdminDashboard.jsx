@@ -260,16 +260,16 @@ export default function AdminDashboard() {
               </DrawerHeader>
               <form onSubmit={handleSaveTest} className="p-4 flex flex-col gap-5">
                 <div className="grid gap-5 md:grid-cols-[1fr_220px]">
-                  <label className="text-sm font-bold text-slate-700">
+                  <label className="text-sm font-bold text-foreground">
                     Title
                     <input
                       required
                       value={createForm.title}
                       onChange={(event) => setCreateForm({ ...createForm, title: event.target.value })}
-                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
                     />
                   </label>
-                  <label className="text-sm font-bold text-slate-700">
+                  <label className="text-sm font-bold text-foreground">
                     Duration (seconds)
                     <input
                       required
@@ -277,39 +277,39 @@ export default function AdminDashboard() {
                       type="number"
                       value={createForm.durationSeconds}
                       onChange={(event) => setCreateForm({ ...createForm, durationSeconds: event.target.value })}
-                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
                     />
                   </label>
                 </div>
-                <label className="text-sm font-bold text-slate-700">
+                <label className="text-sm font-bold text-foreground">
                   Live Message (Timing/Details)
                   <input
                     required
                     value={createForm.liveMessage}
                     onChange={(event) => setCreateForm({ ...createForm, liveMessage: event.target.value })}
                     placeholder="e.g. Assessment will be live on 2nd of October, from 6 AM to 11 PM"
-                    className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
                   />
                 </label>
-                <label className="text-sm font-bold text-slate-700">
+                <label className="text-sm font-bold text-foreground">
                   Description
                   <textarea
                     rows="3"
                     value={createForm.description}
                     onChange={(event) => setCreateForm({ ...createForm, description: event.target.value })}
-                    className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-slate-950"
+                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 outline-none focus:border-slate-950"
                   />
                 </label>
                 <DrawerFooter className="px-0">
                   <button
                     type="submit"
                     disabled={creating}
-                    className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:opacity-50"
+                    className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-primary-foreground hover:bg-emerald-700 disabled:opacity-50"
                   >
                     {creating ? "Saving..." : editingTestId ? "Save Changes" : "Create draft"}
                   </button>
                   <DrawerClose asChild>
-                    <button type="button" className="rounded-xl border border-slate-200 bg-card px-5 py-3 text-sm font-black text-slate-900 hover:bg-slate-50">
+                    <button type="button" className="rounded-xl border border-border bg-card px-5 py-3 text-sm font-black text-foreground hover:bg-muted/50">
                       Cancel
                     </button>
                   </DrawerClose>
@@ -334,9 +334,9 @@ export default function AdminDashboard() {
         {loading && (
           <div className="rounded-[2rem] bg-card p-12 text-center shadow-sm">
 
-            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-950" />
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-border border-t-slate-950" />
 
-            <p className="text-sm font-semibold text-slate-500">
+            <p className="text-sm font-semibold text-muted-foreground">
               Loading assessments...
             </p>
 
@@ -351,11 +351,11 @@ export default function AdminDashboard() {
           tests.length === 0 && (
             <div className="rounded-[2rem] bg-card p-12 text-center shadow-sm">
 
-              <h3 className="text-xl font-black text-slate-950">
+              <h3 className="text-xl font-black text-foreground">
                 No assessments found
               </h3>
 
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Create an assessment from the admin
                 tools.
               </p>
@@ -393,7 +393,7 @@ export default function AdminDashboard() {
                 return (
                   <article
                     key={test.id}
-                    className="rounded-[2rem] border border-black/5 bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                    className="rounded-[2rem] border border-border bg-card p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
 
                     {/* Card Top */}
@@ -417,8 +417,8 @@ export default function AdminDashboard() {
                               : isClosed
                               ? "bg-red-100 text-red-700"
                               : isArchived
-                              ? "bg-slate-200 text-slate-600"
-                              : "bg-slate-100 text-slate-600"
+                              ? "bg-muted text-muted-foreground"
+                              : "bg-muted text-muted-foreground"
                           }
                         `}
                       >
@@ -428,12 +428,12 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="mt-5 font-display text-2xl font-black tracking-[-0.03em] text-slate-950">
+                    <h3 className="mt-5 font-display text-2xl font-black tracking-[-0.03em] text-foreground">
                       {test.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-3 min-h-[72px] text-sm leading-6 text-slate-500">
+                    <p className="mt-3 min-h-[72px] text-sm leading-6 text-muted-foreground">
                       {test.description ||
                         "No description provided."}
                     </p>
@@ -441,22 +441,22 @@ export default function AdminDashboard() {
                     {/* Metadata */}
                     <div className="mt-6 grid grid-cols-2 gap-3">
 
-                      <div className="rounded-xl bg-[#f5efe6] p-4">
+                      <div className="rounded-xl bg-background p-4">
                         <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
                           Duration
                         </p>
 
-                        <p className="mt-1 text-lg font-black text-slate-950">
+                        <p className="mt-1 text-lg font-black text-foreground">
                           {durationMinutes} min
                         </p>
                       </div>
 
-                      <div className="rounded-xl bg-[#f5efe6] p-4">
+                      <div className="rounded-xl bg-background p-4">
                         <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
                           Version
                         </p>
 
-                        <p className="mt-1 text-lg font-black text-slate-950">
+                        <p className="mt-1 text-lg font-black text-foreground">
                           v{test.version}
                         </p>
                       </div>
@@ -468,14 +468,14 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         onClick={() => openEditDrawer(test)}
-                        className="flex-1 rounded-xl border border-slate-200 bg-card px-5 py-3.5 text-sm font-black text-slate-900 transition hover:-translate-y-0.5 hover:bg-slate-50"
+                        className="flex-1 rounded-xl border border-border bg-card px-5 py-3.5 text-sm font-black text-foreground transition hover:-translate-y-0.5 hover:bg-muted/50"
                       >
                         Edit Details
                       </button>
                       <button
                         type="button"
                         onClick={() => openAssessment(test.id)}
-                        className="flex-1 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
+                        className="flex-1 rounded-xl bg-primary px-5 py-3.5 text-sm font-black text-primary-foreground transition hover:-translate-y-0.5 hover:bg-primary"
                       >
                         Manage Content
                       </button>
@@ -484,7 +484,7 @@ export default function AdminDashboard() {
                     <button
                       type="button"
                       onClick={() => openResults(test.id)}
-                      className="mt-3 w-full rounded-xl border border-slate-200 px-4 py-3.5 text-sm font-black text-slate-700 transition hover:bg-slate-50"
+                      className="mt-3 w-full rounded-xl border border-border px-4 py-3.5 text-sm font-black text-foreground transition hover:bg-muted/50"
                     >
                       View responses
                     </button>
@@ -531,7 +531,7 @@ export default function AdminDashboard() {
 
                     {/* Archived */}
                     {isArchived && (
-                      <div className="mt-6 rounded-xl bg-slate-100 px-4 py-3 text-center text-xs font-bold text-slate-600">
+                      <div className="mt-6 rounded-xl bg-muted px-4 py-3 text-center text-xs font-bold text-muted-foreground">
                         Archived assessment
                       </div>
                     )}

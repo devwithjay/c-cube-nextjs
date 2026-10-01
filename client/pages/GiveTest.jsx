@@ -946,12 +946,12 @@ export default function GiveTest() {
             </svg>
           </div>
 
-          <h1 className="mt-2 text-3xl font-black text-slate-950 md:text-4xl">
+          <h1 className="mt-2 text-3xl font-black text-foreground md:text-4xl">
             Assessment Not Active Yet
           </h1>
 
-          <div className="mt-6 max-w-lg rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
-            <p className="text-lg font-medium leading-relaxed text-slate-700">
+          <div className="mt-6 max-w-lg rounded-2xl bg-card p-6 shadow-sm border border-slate-100">
+            <p className="text-lg font-medium leading-relaxed text-foreground">
               {assessment?.status === "draft" && assessment?.live_message
                 ? assessment.live_message
                 : "The test will begin tomorrow on 2nd of October from 6 PM to 11 PM."}
@@ -961,7 +961,7 @@ export default function GiveTest() {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="mt-10 rounded-full bg-slate-950 px-8 py-3.5 text-sm font-bold text-white transition hover:bg-slate-800 hover:-translate-y-0.5 shadow-lg shadow-slate-900/20"
+            className="mt-10 rounded-full bg-primary px-8 py-3.5 text-sm font-bold text-primary-foreground transition hover:bg-primary hover:-translate-y-0.5 shadow-lg shadow-slate-900/20"
           >
             Return to website
           </button>
@@ -986,11 +986,11 @@ export default function GiveTest() {
             ✓
           </div>
 
-          <h1 className="font-display text-4xl font-black tracking-tight text-slate-950 mb-4">
+          <h1 className="font-display text-4xl font-black tracking-tight text-foreground mb-4">
             Test Submitted Successfully!
           </h1>
 
-          <p className="text-lg leading-7 text-slate-600 max-w-xl mb-8">
+          <p className="text-lg leading-7 text-muted-foreground max-w-xl mb-8">
             Thank you for completing the 3Q Online Assessment. Your responses have been recorded.
             To receive your results and stay updated on further steps, please join your designated WhatsApp group below.
           </p>
@@ -999,7 +999,7 @@ export default function GiveTest() {
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-md hover:bg-blue-700 transition-all hover:-translate-y-1"
+            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-8 py-4 text-lg font-bold text-primary-foreground shadow-md hover:bg-blue-700 transition-all hover:-translate-y-1"
           >
             Join WhatsApp Group for Results
           </a>
@@ -1020,11 +1020,11 @@ export default function GiveTest() {
             3Q Online Assessment
           </p>
 
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] text-slate-950">
+          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] text-foreground">
             {assessment.title}
           </h1>
 
-          <p className="mt-4 max-w-2xl leading-7 text-slate-600">
+          <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
             {assessment.description ||
               "Complete this assessment thoughtfully. Enter your official student details before starting."}
           </p>
@@ -1297,7 +1297,7 @@ export default function GiveTest() {
           <button
             type="submit"
             disabled={submitting}
-            className="sm:col-span-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="sm:col-span-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-black text-primary-foreground transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting
               ? "Starting assessment..."
@@ -1356,11 +1356,11 @@ export default function GiveTest() {
             3Q Online Assessment
           </p>
 
-          <h1 className="mt-3 text-3xl font-black text-slate-950">
+          <h1 className="mt-3 text-3xl font-black text-foreground">
             Questions are not available
           </h1>
 
-          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-muted-foreground">
             The assessment has been published,
             but no questions have been added yet.
             Please contact the administrator.
@@ -1371,7 +1371,7 @@ export default function GiveTest() {
             onClick={() =>
               navigate("/")
             }
-            className="mt-7 rounded-xl bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+            className="mt-7 rounded-xl bg-primary px-6 py-3 text-sm font-black text-primary-foreground transition hover:bg-primary"
           >
             Return to website
           </button>
@@ -1388,25 +1388,25 @@ export default function GiveTest() {
     <Shell wide>
       {/* HEADER */}
 
-      <div className="sticky top-3 z-20 rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-sm backdrop-blur">
+      <div className="sticky top-3 z-20 rounded-2xl border border-slate-100 bg-card/95 p-4 shadow-sm backdrop-blur">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
               {assessment.title}
             </p>
 
-            <h1 className="mt-1 text-xl font-black text-slate-950">
+            <h1 className="mt-1 text-xl font-black text-foreground">
               3Q Online Assessment
             </h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="rounded-xl bg-slate-100 px-4 py-2.5">
+            <div className="rounded-xl bg-muted px-4 py-2.5">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
                 Progress
               </p>
 
-              <p className="mt-0.5 text-sm font-black text-slate-900">
+              <p className="mt-0.5 text-sm font-black text-foreground">
                 {answeredCount}/
                 {questions.length}{" "}
                 answered
@@ -1498,18 +1498,18 @@ export default function GiveTest() {
                     });
                   }}
                   className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${active
-                      ? "bg-slate-950 text-white"
+                      ? "bg-primary text-primary-foreground"
                       : disabled
-                        ? "cursor-not-allowed bg-slate-100 text-slate-300"
-                        : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
+                        ? "cursor-not-allowed bg-muted text-slate-300"
+                        : "bg-card text-muted-foreground ring-1 ring-slate-200 hover:bg-muted/50"
                     }`}
                 >
                   {section.name}
 
                   <span
                     className={`ml-2 rounded-full px-2 py-0.5 text-[10px] ${active
-                        ? "bg-white/15"
-                        : "bg-slate-100"
+                        ? "bg-card/15"
+                        : "bg-muted"
                       }`}
                   >
                     {sectionAnswered}/
@@ -1526,7 +1526,7 @@ export default function GiveTest() {
 
       {currentSection &&
         currentQuestions.length > 0 && (
-          <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4">
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-card p-4">
             <div className="flex flex-wrap gap-2">
               {currentQuestions.map(
                 (
@@ -1555,10 +1555,10 @@ export default function GiveTest() {
                         )
                       }
                       className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-black transition ${active
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-emerald-600 text-primary-foreground"
                           : answered
                             ? "bg-emerald-100 text-emerald-700"
-                            : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                            : "bg-muted text-muted-foreground hover:bg-muted"
                         }`}
                     >
                       {questionIndex + 1}
@@ -1573,14 +1573,14 @@ export default function GiveTest() {
       {/* QUESTION */}
 
       {currentQuestion ? (
-        <article className="mt-6 rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm sm:p-8">
+        <article className="mt-6 rounded-[2rem] border border-slate-100 bg-card p-5 shadow-sm sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
                 {currentSection?.name}
               </p>
 
-              <p className="mt-1 text-sm font-bold text-slate-500">
+              <p className="mt-1 text-sm font-bold text-muted-foreground">
                 Question{" "}
                 {currentQuestionNumber}{" "}
                 of{" "}
@@ -1588,7 +1588,7 @@ export default function GiveTest() {
               </p>
             </div>
 
-            <div className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+            <div className="rounded-full bg-muted px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-muted-foreground">
               {getQuestionType(
                 currentQuestion
               ) === "mcq"
@@ -1602,12 +1602,12 @@ export default function GiveTest() {
           </div>
 
           <div className="mt-7">
-            <h2 className="text-xl font-black leading-8 text-slate-950 sm:text-2xl">
+            <h2 className="text-xl font-black leading-8 text-foreground sm:text-2xl">
               {currentQuestion.questionText}
             </h2>
 
             {currentQuestion.questionImageUrl && (
-              <div className="mt-6 flex justify-center rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:p-6">
+              <div className="mt-6 flex justify-center rounded-2xl border border-slate-100 bg-muted/50 p-4 sm:p-6">
                 <img
                   src={
                     currentQuestion.questionImageUrl
@@ -1665,19 +1665,19 @@ export default function GiveTest() {
                       }
                       className={`flex w-full items-start gap-4 rounded-2xl border p-4 text-left transition ${selected
                           ? "border-emerald-500 bg-emerald-50"
-                          : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                          : "border-border bg-card hover:border-border hover:bg-muted/50"
                         } disabled:cursor-not-allowed disabled:opacity-60`}
                     >
                       <span
                         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black ${selected
-                            ? "bg-emerald-600 text-white"
-                            : "bg-slate-100 text-slate-600"
+                            ? "bg-emerald-600 text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
                           }`}
                       >
                         {option.key}
                       </span>
 
-                      <span className="pt-1 text-sm font-semibold leading-6 text-slate-800">
+                      <span className="pt-1 text-sm font-semibold leading-6 text-foreground">
                         {option.text}
                       </span>
                     </button>
@@ -1711,7 +1711,7 @@ export default function GiveTest() {
                   }
                   disabled={submitting}
                   placeholder="Write your answer here..."
-                  className="w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-slate-50"
+                  className="w-full resize-y rounded-2xl border border-border bg-card px-4 py-4 text-sm font-medium leading-7 text-foreground outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-muted/50"
                 />
 
                 <p className="mt-2 text-xs font-semibold text-slate-400">
@@ -1746,7 +1746,7 @@ export default function GiveTest() {
                   }
                   disabled={submitting}
                   placeholder="Write your detailed answer here..."
-                  className="w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-slate-50"
+                  className="w-full resize-y rounded-2xl border border-border bg-card px-4 py-4 text-sm font-medium leading-7 text-foreground outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-muted/50"
                 />
 
                 <p className="mt-2 text-xs font-semibold text-slate-400">
@@ -1773,7 +1773,7 @@ export default function GiveTest() {
               onClick={
                 goToPreviousQuestion
               }
-              className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-xl border border-border bg-card px-5 py-3 text-sm font-black text-foreground transition hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-40"
             >
               ← Previous
             </button>
@@ -1800,7 +1800,7 @@ export default function GiveTest() {
                 onClick={
                   goToNextQuestion
                 }
-                className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Next →
               </button>
@@ -1815,7 +1815,7 @@ export default function GiveTest() {
                 onClick={() =>
                   handleSubmit(false)
                 }
-                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-primary-foreground transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {submitting
                   ? "Submitting..."
@@ -1826,11 +1826,11 @@ export default function GiveTest() {
         </article>
       ) : (
         <div className="mt-6 rounded-[2rem] border border-amber-100 bg-amber-50 p-8 text-center">
-          <h2 className="text-xl font-black text-slate-950">
+          <h2 className="text-xl font-black text-foreground">
             No questions in this section
           </h2>
 
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             This section does not contain
             questions yet. Please select another
             section.
@@ -1851,7 +1851,7 @@ export default function GiveTest() {
           onClick={() =>
             handleSubmit(false)
           }
-          className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-xl border border-border bg-card px-6 py-3 text-sm font-black text-foreground transition hover:border-border hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting
             ? "Submitting..."
@@ -1879,7 +1879,7 @@ export default function GiveTest() {
               onClick={() =>
                 setConfirmDialog({ ...confirmDialog, isOpen: false })
               }
-              className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              className="rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted/50"
             >
               Cancel
             </button>
@@ -1888,7 +1888,7 @@ export default function GiveTest() {
                 setConfirmDialog({ ...confirmDialog, isOpen: false });
                 executeSubmit();
               }}
-              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+              className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-blue-700"
             >
               OK
             </button>
@@ -1908,14 +1908,14 @@ function Shell({
   wide = false
 }) {
   return (
-    <main className="min-h-screen bg-[#f5efe6] px-4 py-6 sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-background px-4 py-6 sm:px-6 sm:py-10">
       <div
         className={`mx-auto ${wide
             ? "max-w-6xl"
             : "max-w-4xl"
           }`}
       >
-        <div className="rounded-[2rem] bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10">
+        <div className="rounded-[2rem] bg-card p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10">
           {children}
         </div>
       </div>
@@ -1944,9 +1944,9 @@ function LoadingState({
 
   return (
     <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600" />
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-border border-t-emerald-600" />
 
-      <p className="mt-5 font-bold text-slate-500 transition-opacity duration-300">
+      <p className="mt-5 font-bold text-muted-foreground transition-opacity duration-300">
         {loadingText}
       </p>
     </div>
@@ -1959,7 +1959,7 @@ function FormField({
   children
 }) {
   return (
-    <label className="text-sm font-bold text-slate-700">
+    <label className="text-sm font-bold text-foreground">
       <span>
         {label}
 
@@ -1980,12 +1980,12 @@ function ResultStat({
   value
 }) {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+    <div className="rounded-2xl border border-slate-100 bg-muted/50 p-5">
       <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
         {label}
       </p>
 
-      <p className="mt-2 text-2xl font-black text-slate-950">
+      <p className="mt-2 text-2xl font-black text-foreground">
         {value}
       </p>
     </div>
@@ -1997,7 +1997,7 @@ function ResultStat({
    ========================================================= */
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";
+  "mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";
 
 const selectClass =
-  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";
+  "mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";
