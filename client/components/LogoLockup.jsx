@@ -14,7 +14,7 @@ export default function LogoLockup({ dark = false }) {
         className={`hidden h-8 w-px sm:block ${dark ? "bg-white/20" : "bg-black/10"}`}
       />
       <img
-        src="/assets/vit-logo.png"
+        src="/assets/vit-logo-transparent.png"
         alt="Vishwakarma Institute of Technology logo"
         className="h-9 w-auto object-contain"
       />

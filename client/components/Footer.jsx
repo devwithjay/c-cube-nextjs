@@ -15,7 +15,7 @@ export default function Footer() {
             </div>
             <div className="h-10 w-px bg-white/20" />
             <img
-              src="/assets/vit-logo.png"
+              src="/assets/vit-logo-transparent.png"
               alt="Vishwakarma Institute of Technology logo"
               className="h-12 w-auto max-w-36 object-contain"
             />

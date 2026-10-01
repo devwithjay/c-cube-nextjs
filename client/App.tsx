@@ -93,7 +93,7 @@ export default function App() {
           <button onClick={() => scrollTo("home")} className="flex items-center gap-3">
             <img src="/assets/ccubelogo.png" alt="C Cube" className="h-10 w-10 object-contain" />
             <div className="hidden h-8 w-px bg-border sm:block" />
-            <img src="/assets/vit-logo.png" alt="VIT" className="hidden sm:block h-9 w-auto object-contain" />
+            <img src="/assets/vit-logo-transparent.png" alt="VIT" className="hidden sm:block h-9 w-auto object-contain" />
             <div className="hidden sm:block leading-tight text-left">
               <p className="text-[11px] font-extrabold tracking-[0.12em] text-foreground">C CUBE</p>
               <p className="text-[9px] font-medium uppercase tracking-[0.1em] text-muted-foreground">VIT Pune</p>
