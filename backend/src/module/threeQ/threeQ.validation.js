@@ -229,6 +229,22 @@ export const startTestSchema = z.object({
         error:
           "Please select a valid living option"
       }
+    ),
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | Gender
+  |--------------------------------------------------------------------------
+  */
+
+  gender:
+    z.enum(
+      ["male", "female"],
+      {
+        error:
+          "Please select a valid gender"
+      }
     )
 
 });
