@@ -1,5 +1,4 @@
-import {
-  unpublishTest, Router } from "express";
+import { Router } from "express";
 
 import {
   unpublishTest,
@@ -16,7 +15,6 @@ import {
 } from "./admin.test.controller.js";
 
 import {
-  unpublishTest,
   requireAdmin
 } from "./admin.middleware.js";
 
