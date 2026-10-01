@@ -326,10 +326,34 @@ export async function findPublishedTest() {
         duration_seconds,
         status,
         version,
+        live_message,
         created_at,
         updated_at
       FROM three_q_tests
       WHERE status = 'published'
+      ORDER BY version DESC
+      LIMIT 1
+    `
+  );
+}
+
+/**
+ * Find latest test regardless of status.
+ */
+export async function findLatestTest() {
+  return get(
+    `
+      SELECT
+        id,
+        title,
+        description,
+        duration_seconds,
+        status,
+        version,
+        live_message,
+        created_at,
+        updated_at
+      FROM three_q_tests
       ORDER BY version DESC
       LIMIT 1
     `
@@ -351,6 +375,7 @@ export async function findTestById(
         duration_seconds,
         status,
         version,
+        live_message,
         created_at,
         updated_at
       FROM three_q_tests

@@ -12,6 +12,7 @@ import {
 
 import {
   findPublishedTest,
+  findLatestTest,
   findTestById,
   findSections,
   findQuestions,
@@ -387,6 +388,8 @@ async function assembleTestPayload(test) {
         id: test.id,
         title: test.title,
         description: test.description,
+        status: test.status,
+        live_message: test.live_message,
         durationSeconds:
           Number(test.duration_seconds),
 
@@ -1871,8 +1874,24 @@ export async function getPublishedTest() {
     await findPublishedTest();
 
   if (!test) {
+    // If no published test exists, return the latest draft test (just metadata, no questions)
+    // so the frontend can display its live_message.
+    const latestTest = await findLatestTest();
+    if (latestTest) {
+      return {
+        id: latestTest.id,
+        title: latestTest.title,
+        description: latestTest.description,
+        status: latestTest.status,
+        durationSeconds: latestTest.duration_seconds,
+        live_message: latestTest.live_message,
+        version: latestTest.version,
+        sections: [] // Empty sections so we don't leak draft questions
+      };
+    }
+
     throw createServiceError(
-      "No published test found.",
+      "No test found.",
       404
     );
   }
