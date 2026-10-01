@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Inter", system-ui, sans-serif;
+  color: #0f172a;
+  background: #f5efe6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f5efe6;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #ddd6fe;
+  color: #111827;
+}
+
+/* Tailwind's arbitrary dynamic class names cannot be generated from data.
+   This small helper keeps the giant heading color neutral/soft. */
+.text-green-placeholder {
+  color: rgba(16, 185, 129, 0.32);
+}
+
+.text-violet-placeholder {
+  color: rgba(124, 58, 237, 0.32);
+}
+
+.text-orange-placeholder {
+  color: rgba(249, 115, 22, 0.32);
+}
+
+.text-red-placeholder {
+  color: rgba(239, 68, 68, 0.32);
+}
+
+.hero-logo {
+  isolation: isolate;
+}
+
+.hero-logo::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.16), rgba(124, 58, 237, 0.08) 38%, transparent 72%);
+  filter: blur(18px);
+  z-index: -1;
+  animation: hero-logo-glow 4.5s ease-in-out infinite;
+}
+
+.logo-float {
+  animation: logo-float 3.8s ease-in-out infinite;
+}
+
+.logo-ring-pulse {
+  animation: logo-ring-pulse 3.8s ease-in-out infinite;
+}
+
+.logo-ring-pulse-delayed {
+  animation-delay: -1.4s;
+}
+
+.logo-ring-spin {
+  animation: logo-ring-spin 18s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes hero-logo-glow {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg) scale(1);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(2deg) scale(1.02);
+  }
+}
+
+@keyframes logo-ring-pulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+
+  25% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes logo-ring-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(90deg) scale(1.03);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.06);
+  }
+
+  75% {
+    transform: rotate(270deg) scale(1.03);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

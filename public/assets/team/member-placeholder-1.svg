@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+      <rect width="600" height="600" fill="#f8fafc"/>
+      <circle cx="300" cy="300" r="220" fill="#ffffff" stroke="#e2e8f0" stroke-width="5"/>
+      <circle cx="300" cy="270" r="95" fill="#10b981" opacity=".18"/>
+      <circle cx="300" cy="245" r="55" fill="#10b981"/>
+      <path d="M175 455c18-91 232-91 250 0" fill="#10b981" opacity=".75"/>
+      <text x="300" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="800" fill="#475569">MEMBER PHOTO</text>
+      <text x="300" y="550" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#94a3b8">Replace in public/assets/team/</text>
+    </svg>

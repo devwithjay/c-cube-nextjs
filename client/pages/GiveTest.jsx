@@ -1,0 +1,1986 @@
+import {
+  useEffect,
+  useMemo,
+  useState
+} from "react";
+
+import { useNavigate } from "react-router-dom";
+
+import {
+  getAssessmentForSession,
+  getPublishedAssessment,
+  saveAssessmentAnswer,
+  startAssessment,
+  submitAssessment
+} from "../services/threeQApi.js";
+
+/* =========================================================
+   CONSTANTS
+   ========================================================= */
+
+const BRANCHES = [
+  "Computer Engineering",
+  "Information Technology",
+  "Computer Science & Engineering (AI)",
+  "Computer Science & Engineering (AIML)",
+  "Artificial Intelligence and Data Science",
+  "Computer Engineering (Software Engineering)",
+  "Computer Science & Engineering (DS)",
+  "Computer Science & Engineering (IoT & Cybersecurity including Blockchain Technology)",
+  "Electronics & Tele Communication Engineering",
+  "Instrumentation & Control Engineering",
+  "Mechanical Engineering",
+  "Civil Engineering"
+];
+
+const DIVISIONS = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L"
+];
+
+const CAMPUSES = [
+  "VIT Bibwewadi",
+  "VIT Kondhwa"
+];
+
+const LIVING_OPTIONS = [
+  "Hostel",
+  "PG/flat",
+  "Native"
+];
+
+const initialParticipant = {
+  name: "",
+  branch: "",
+  division: "",
+  prn: "",
+  collegeEmail: "",
+  mobileNumber: "",
+  campus: "",
+  livingAt: ""
+};
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function isAnswerProvided(answer) {
+  if (!answer) {
+    return false;
+  }
+
+  if (
+    answer.selectedOptionId !== null &&
+    answer.selectedOptionId !== undefined
+  ) {
+    return true;
+  }
+
+  if (
+    typeof answer.answerText === "string" &&
+    answer.answerText.trim().length > 0
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function formatTime(totalSeconds) {
+  const safeSeconds = Math.max(
+    0,
+    Number(totalSeconds) || 0
+  );
+
+  const hours = Math.floor(
+    safeSeconds / 3600
+  );
+
+  const minutes = Math.floor(
+    (safeSeconds % 3600) / 60
+  );
+
+  const seconds =
+    safeSeconds % 60;
+
+  if (hours > 0) {
+    return `${String(hours).padStart(2, "0")}:${String(
+      minutes
+    ).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  }
+
+  return `${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getQuestionType(question) {
+  return (
+    question?.questionType ||
+    "mcq"
+  ).toLowerCase();
+}
+
+/* =========================================================
+   MAIN COMPONENT
+   ========================================================= */
+
+export default function GiveTest() {
+  const navigate = useNavigate();
+
+  const [assessment, setAssessment] =
+    useState(null);
+
+  const [participant, setParticipant] =
+    useState(initialParticipant);
+
+  const [sessionId, setSessionId] =
+    useState("");
+
+  const [expiresAt, setExpiresAt] =
+    useState(null);
+
+  const [answers, setAnswers] =
+    useState({});
+
+  const [result, setResult] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [submitting, setSubmitting] =
+    useState(false);
+
+  const [savingQuestionId, setSavingQuestionId] =
+    useState(null);
+
+  const [error, setError] =
+    useState("");
+
+  const [currentSectionIndex, setCurrentSectionIndex] =
+    useState(0);
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] =
+    useState(0);
+
+  const [remainingSeconds, setRemainingSeconds] =
+    useState(null);
+
+  const [timeExpired, setTimeExpired] =
+    useState(false);
+
+  /* =======================================================
+     QUESTIONS
+     ======================================================= */
+
+  const sections =
+    assessment?.sections || [];
+
+  const questions = useMemo(
+    () =>
+      sections.flatMap(
+        (section) =>
+          section.questions || []
+      ),
+    [sections]
+  );
+
+  const nonEmptySections = useMemo(
+    () =>
+      sections
+        .map((section, index) => ({
+          section,
+          index
+        }))
+        .filter(
+          ({ section }) =>
+            (section.questions || []).length > 0
+        ),
+    [sections]
+  );
+
+  const currentSection =
+    sections[currentSectionIndex] || null;
+
+  const currentQuestions =
+    currentSection?.questions || [];
+
+  const currentQuestion =
+    currentQuestions[currentQuestionIndex] ||
+    null;
+
+  /* =======================================================
+     TOTAL ANSWERED
+     ======================================================= */
+
+  const answeredCount = useMemo(() => {
+    return questions.filter((question) =>
+      isAnswerProvided(
+        answers[question.id]
+      )
+    ).length;
+  }, [answers, questions]);
+
+  /* =======================================================
+     INITIAL ASSESSMENT LOAD
+     ======================================================= */
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadAssessment() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response =
+          await getPublishedAssessment();
+
+        if (!mounted) {
+          return;
+        }
+
+        setAssessment(
+          response?.data || null
+        );
+      } catch (requestError) {
+        if (!mounted) {
+          return;
+        }
+
+        setError(
+          requestError?.message ||
+          "No assessment is currently available."
+        );
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadAssessment();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  /* =======================================================
+     ENSURE CURRENT SECTION HAS QUESTIONS
+     ======================================================= */
+
+  useEffect(() => {
+    if (!sessionId || !sections.length) {
+      return;
+    }
+
+    const currentHasQuestions =
+      currentQuestions.length > 0;
+
+    if (currentHasQuestions) {
+      if (
+        currentQuestionIndex >=
+        currentQuestions.length
+      ) {
+        setCurrentQuestionIndex(0);
+      }
+
+      return;
+    }
+
+    const firstAvailable =
+      nonEmptySections[0];
+
+    if (firstAvailable) {
+      setCurrentSectionIndex(
+        firstAvailable.index
+      );
+
+      setCurrentQuestionIndex(0);
+    }
+  }, [
+    sessionId,
+    sections,
+    currentQuestions.length,
+    currentQuestionIndex,
+    nonEmptySections
+  ]);
+
+  /* =======================================================
+     TIMER
+     ======================================================= */
+
+  useEffect(() => {
+    if (!sessionId || !expiresAt) {
+      return undefined;
+    }
+
+    function updateTimer() {
+      const difference =
+        new Date(expiresAt).getTime() -
+        Date.now();
+
+      const seconds = Math.max(
+        0,
+        Math.ceil(
+          difference / 1000
+        )
+      );
+
+      setRemainingSeconds(seconds);
+
+      if (seconds <= 0) {
+        setTimeExpired(true);
+      }
+    }
+
+    updateTimer();
+
+    const interval =
+      window.setInterval(
+        updateTimer,
+        1000
+      );
+
+    return () => {
+      window.clearInterval(
+        interval
+      );
+    };
+  }, [sessionId, expiresAt]);
+
+  /* =======================================================
+     AUTO SUBMIT WHEN TIMER EXPIRES
+     ======================================================= */
+
+  useEffect(() => {
+    if (
+      !timeExpired ||
+      !sessionId ||
+      result ||
+      submitting
+    ) {
+      return;
+    }
+
+    async function autoSubmit() {
+      try {
+        setSubmitting(true);
+        setError("");
+
+        const response =
+          await submitAssessment(
+            sessionId
+          );
+
+        setResult(
+          response?.data || null
+        );
+
+        sessionStorage.removeItem(
+          "c_cube_three_q_session"
+        );
+      } catch (requestError) {
+        setError(
+          requestError?.message ||
+          "Time expired and automatic submission failed. Please try submitting again."
+        );
+
+        setTimeExpired(false);
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    autoSubmit();
+  }, [
+    timeExpired,
+    sessionId,
+    result,
+    submitting
+  ]);
+
+  /* =======================================================
+     START TEST
+     ======================================================= */
+
+  async function handleStart(event) {
+    event.preventDefault();
+
+    try {
+      setSubmitting(true);
+      setError("");
+
+      const response =
+        await startAssessment(
+          participant
+        );
+
+      const newSessionId =
+        response?.data?.sessionId;
+
+      const session =
+        response?.data?.session;
+
+      if (!newSessionId) {
+        throw new Error(
+          "The server did not return a valid session."
+        );
+      }
+
+      const testResponse =
+        await getAssessmentForSession(
+          newSessionId
+        );
+
+      const test =
+        testResponse?.data?.test ||
+        assessment;
+
+      setSessionId(
+        newSessionId
+      );
+
+      setExpiresAt(
+        session?.expiresAt ||
+        null
+      );
+
+      setRemainingSeconds(
+        session?.remainingSeconds ??
+        null
+      );
+
+      setAssessment(test);
+
+      setAnswers({});
+
+      const firstAvailableSection =
+        (test?.sections || [])
+          .map((section, index) => ({
+            section,
+            index
+          }))
+          .find(
+            ({ section }) =>
+              (section.questions || []).length > 0
+          );
+
+      setCurrentSectionIndex(
+        firstAvailableSection?.index ?? 0
+      );
+
+      setCurrentQuestionIndex(0);
+
+      sessionStorage.setItem(
+        "c_cube_three_q_session",
+        JSON.stringify({
+          sessionId:
+            newSessionId,
+          expiresAt:
+            session?.expiresAt ||
+            null
+        })
+      );
+    } catch (requestError) {
+      setError(
+        requestError?.message ||
+        "Unable to start the assessment."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  /* =======================================================
+     UPDATE PARTICIPANT FIELD
+     ======================================================= */
+
+  function updateParticipant(
+    field,
+    value
+  ) {
+    setParticipant(
+      (current) => ({
+        ...current,
+        [field]: value
+      })
+    );
+  }
+
+  /* =======================================================
+     SAVE ANSWER
+     ======================================================= */
+
+  async function saveAnswer(
+    question,
+    selectedOptionId = null,
+    answerText = null
+  ) {
+    if (
+      !sessionId ||
+      !question
+    ) {
+      return false;
+    }
+
+    const normalizedText =
+      typeof answerText === "string"
+        ? answerText
+        : null;
+
+    try {
+      setSavingQuestionId(
+        question.id
+      );
+
+      setError("");
+
+      await saveAssessmentAnswer(
+        sessionId,
+        question.id,
+        selectedOptionId,
+        normalizedText
+      );
+
+      setAnswers(
+        (current) => ({
+          ...current,
+          [question.id]: {
+            selectedOptionId:
+              selectedOptionId ??
+              null,
+            answerText:
+              normalizedText ?? ""
+          }
+        })
+      );
+
+      return true;
+    } catch (requestError) {
+      setError(
+        requestError?.message ||
+        "Unable to save this answer."
+      );
+
+      return false;
+    } finally {
+      setSavingQuestionId(
+        null
+      );
+    }
+  }
+
+  /* =======================================================
+     MCQ ANSWER
+     ======================================================= */
+
+  async function chooseAnswer(
+    question,
+    optionId
+  ) {
+    if (
+      submitting ||
+      savingQuestionId
+    ) {
+      return;
+    }
+
+    await saveAnswer(
+      question,
+      optionId,
+      null
+    );
+  }
+
+  /* =======================================================
+     TEXT ANSWER CHANGE
+     ======================================================= */
+
+  function updateTextAnswer(
+    questionId,
+    value
+  ) {
+    setAnswers(
+      (current) => ({
+        ...current,
+        [questionId]: {
+          selectedOptionId: null,
+          answerText: value
+        }
+      })
+    );
+  }
+
+  /* =======================================================
+     SAVE TEXT ANSWER ON BLUR
+     ======================================================= */
+
+  async function handleTextBlur(
+    question
+  ) {
+    const currentAnswer =
+      answers[question.id];
+
+    const text =
+      currentAnswer?.answerText ||
+      "";
+
+    if (!text.trim()) {
+      return;
+    }
+
+    await saveAnswer(
+      question,
+      null,
+      text
+    );
+  }
+
+  /* =======================================================
+     NAVIGATION HELPERS
+     ======================================================= */
+
+  function findNextAvailableSection(
+    fromIndex
+  ) {
+    for (
+      let index = fromIndex + 1;
+      index < sections.length;
+      index += 1
+    ) {
+      if (
+        (sections[index]?.questions || [])
+          .length > 0
+      ) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  function findPreviousAvailableSection(
+    fromIndex
+  ) {
+    for (
+      let index = fromIndex - 1;
+      index >= 0;
+      index -= 1
+    ) {
+      if (
+        (sections[index]?.questions || [])
+          .length > 0
+      ) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  function goToNextQuestion() {
+    if (
+      currentQuestionIndex <
+      currentQuestions.length - 1
+    ) {
+      setCurrentQuestionIndex(
+        (current) => current + 1
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      return;
+    }
+
+    const nextSectionIndex =
+      findNextAvailableSection(
+        currentSectionIndex
+      );
+
+    if (nextSectionIndex !== -1) {
+      setCurrentSectionIndex(
+        nextSectionIndex
+      );
+
+      setCurrentQuestionIndex(0);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  }
+
+  function goToPreviousQuestion() {
+    if (
+      currentQuestionIndex > 0
+    ) {
+      setCurrentQuestionIndex(
+        (current) => current - 1
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      return;
+    }
+
+    const previousSectionIndex =
+      findPreviousAvailableSection(
+        currentSectionIndex
+      );
+
+    if (previousSectionIndex !== -1) {
+      const previousSection =
+        sections[
+        previousSectionIndex
+        ];
+
+      setCurrentSectionIndex(
+        previousSectionIndex
+      );
+
+      setCurrentQuestionIndex(
+        Math.max(
+          0,
+          (previousSection?.questions
+            ?.length || 1) - 1
+        )
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  }
+
+  function jumpToQuestion(
+    sectionIndex,
+    questionIndex
+  ) {
+    const section =
+      sections[sectionIndex];
+
+    if (
+      !section ||
+      !(section.questions || []).length
+    ) {
+      return;
+    }
+
+    setCurrentSectionIndex(
+      sectionIndex
+    );
+
+    setCurrentQuestionIndex(
+      questionIndex
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  /* =======================================================
+     SUBMIT
+     ======================================================= */
+
+  async function handleSubmit(
+    force = false
+  ) {
+    if (
+      !sessionId ||
+      submitting
+    ) {
+      return;
+    }
+
+    /*
+      If the current question is a text question,
+      save its latest value before submitting.
+    */
+    if (
+      currentQuestion &&
+      getQuestionType(
+        currentQuestion
+      ) !== "mcq"
+    ) {
+      const currentAnswer =
+        answers[
+        currentQuestion.id
+        ];
+
+      const text =
+        currentAnswer?.answerText ||
+        "";
+
+      if (text.trim()) {
+        const saved =
+          await saveAnswer(
+            currentQuestion,
+            null,
+            text
+          );
+
+        if (!saved) {
+          return;
+        }
+      }
+    }
+
+    if (!force) {
+      const unanswered =
+        questions.length -
+        answeredCount;
+
+      if (
+        unanswered > 0 &&
+        !window.confirm(
+          `${unanswered} question${unanswered === 1
+            ? ""
+            : "s"
+          } ${unanswered === 1
+            ? "is"
+            : "are"
+          } unanswered. Do you want to submit anyway?`
+        )
+      ) {
+        return;
+      }
+
+      if (
+        !window.confirm(
+          "Are you sure you want to submit the assessment? You will not be able to change your answers after submission."
+        )
+      ) {
+        return;
+      }
+    }
+
+    try {
+      setSubmitting(true);
+      setError("");
+
+      const response =
+        await submitAssessment(
+          sessionId
+        );
+
+      setResult(
+        response?.data || null
+      );
+
+      sessionStorage.removeItem(
+        "c_cube_three_q_session"
+      );
+    } catch (requestError) {
+      setError(
+        requestError?.message ||
+        "Unable to submit the assessment."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  /* =======================================================
+     LOADING
+     ======================================================= */
+
+  if (loading) {
+    return (
+      <Shell>
+        <LoadingState
+          text="Checking for an active assessment..."
+        />
+      </Shell>
+    );
+  }
+
+  /* =======================================================
+     NO ASSESSMENT
+     ======================================================= */
+
+  if (!assessment) {
+    return (
+      <Shell>
+        <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-2xl">
+            !
+          </div>
+
+          <h1 className="mt-5 text-2xl font-black text-slate-950">
+            Assessment unavailable
+          </h1>
+
+          <p className="mt-3 text-slate-600">
+            {error ||
+              "No assessment is currently available."}
+          </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/")
+            }
+            className="mt-7 rounded-xl bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+          >
+            Return to website
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  /* =======================================================
+     RESULT
+     ======================================================= */
+
+  if (result) {
+    const percentage =
+      result.totalQuestions
+        ? Math.round(
+          (result.totalScore /
+            result.totalQuestions) *
+          100
+        )
+        : 0;
+
+    return (
+      <Shell>
+        <div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">
+            ✓
+          </div>
+
+          <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
+            Assessment submitted
+          </p>
+
+          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] text-slate-950">
+            Your result
+          </h1>
+
+          <p className="mt-4 leading-7 text-slate-600">
+            Your responses have been
+            recorded successfully.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <ResultStat
+              label="Score"
+              value={`${result.totalScore}/${result.totalQuestions}`}
+            />
+
+            <ResultStat
+              label="Percentage"
+              value={`${percentage}%`}
+            />
+
+            <ResultStat
+              label="Attempted"
+              value={`${result.attemptedQuestions}/${result.totalQuestions}`}
+            />
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-5">
+            <h2 className="text-lg font-black text-slate-950">
+              Section scores
+            </h2>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {Object.entries(
+                result.sections || {}
+              ).map(
+                ([section, score]) => (
+                  <div
+                    key={section}
+                    className="rounded-xl bg-white px-4 py-4"
+                  >
+                    <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
+                      {section}
+                    </p>
+
+                    <p className="mt-1 text-2xl font-black text-slate-950">
+                      {score}
+                    </p>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          {questions.some(
+            (question) =>
+              getQuestionType(
+                question
+              ) !== "mcq"
+          ) && (
+              <div className="mt-5 rounded-2xl border border-amber-100 bg-amber-50 p-5">
+                <p className="text-sm font-semibold leading-6 text-amber-800">
+                  Written responses have been
+                  recorded. Short-answer and
+                  long-answer questions may require
+                  manual evaluation according to the
+                  assessment configuration.
+                </p>
+              </div>
+            )}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/")
+            }
+            className="mt-8 w-full rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:bg-slate-800"
+          >
+            Return to website
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  /* =======================================================
+     REGISTRATION
+     ======================================================= */
+
+  if (!sessionId) {
+    return (
+      <Shell>
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
+            3Q Online Assessment
+          </p>
+
+          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] text-slate-950">
+            {assessment.title}
+          </h1>
+
+          <p className="mt-4 max-w-2xl leading-7 text-slate-600">
+            {assessment.description ||
+              "Complete this assessment thoughtfully. Enter your official student details before starting."}
+          </p>
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+          <div className="flex gap-3">
+            <div className="mt-0.5 text-lg">
+              ⓘ
+            </div>
+
+            <div>
+              <p className="font-black text-emerald-900">
+                Before you begin
+              </p>
+
+              <p className="mt-1 text-sm leading-6 text-emerald-800">
+                Please make sure your details
+                are correct. Once the assessment
+                starts, the timer will begin
+                immediately.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form
+          onSubmit={handleStart}
+          className="mt-8 grid gap-5 sm:grid-cols-2"
+        >
+          <FormField
+            label="Full name"
+            required
+          >
+            <input
+              required
+              value={participant.name}
+              onChange={(event) =>
+                updateParticipant(
+                  "name",
+                  event.target.value
+                )
+              }
+              className={inputClass}
+              placeholder="Enter your full name"
+            />
+          </FormField>
+
+          <FormField
+            label="PRN"
+            required
+          >
+            <input
+              required
+              value={participant.prn}
+              onChange={(event) =>
+                updateParticipant(
+                  "prn",
+                  event.target.value.trimStart()
+                )
+              }
+              className={inputClass}
+              placeholder="Enter your PRN"
+            />
+          </FormField>
+
+          <FormField
+            label="Branch"
+            required
+          >
+            <select
+              required
+              value={participant.branch}
+              onChange={(event) =>
+                updateParticipant(
+                  "branch",
+                  event.target.value
+                )
+              }
+              className={selectClass}
+            >
+              <option value="">
+                Select your branch
+              </option>
+
+              {BRANCHES.map(
+                (branch) => (
+                  <option
+                    key={branch}
+                    value={branch}
+                  >
+                    {branch}
+                  </option>
+                )
+              )}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Division"
+            required
+          >
+            <select
+              required
+              value={participant.division}
+              onChange={(event) =>
+                updateParticipant(
+                  "division",
+                  event.target.value
+                )
+              }
+              className={selectClass}
+            >
+              <option value="">
+                Select division
+              </option>
+
+              {DIVISIONS.map(
+                (division) => (
+                  <option
+                    key={division}
+                    value={division}
+                  >
+                    Division {division}
+                  </option>
+                )
+              )}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Official VIT email"
+            required
+          >
+            <input
+              required
+              type="email"
+              value={
+                participant.collegeEmail
+              }
+              onChange={(event) =>
+                updateParticipant(
+                  "collegeEmail",
+                  event.target.value
+                )
+              }
+              className={inputClass}
+              placeholder="yourname@vit.edu"
+            />
+          </FormField>
+
+          <FormField
+            label="Mobile number"
+            required
+          >
+            <input
+              required
+              type="tel"
+              inputMode="numeric"
+              pattern="[6-9][0-9]{9}"
+              maxLength={10}
+              value={
+                participant.mobileNumber
+              }
+              onChange={(event) =>
+                updateParticipant(
+                  "mobileNumber",
+                  event.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 10)
+                )
+              }
+              className={inputClass}
+              placeholder="10-digit mobile number"
+              title="Enter a 10-digit mobile number beginning with 6, 7, 8, or 9."
+            />
+          </FormField>
+
+          <FormField
+            label="Campus"
+            required
+          >
+            <select
+              required
+              value={participant.campus}
+              onChange={(event) =>
+                updateParticipant(
+                  "campus",
+                  event.target.value
+                )
+              }
+              className={selectClass}
+            >
+              <option value="">
+                Select campus
+              </option>
+
+              {CAMPUSES.map(
+                (campus) => (
+                  <option
+                    key={campus}
+                    value={campus}
+                  >
+                    {campus}
+                  </option>
+                )
+              )}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Living at"
+            required
+          >
+            <select
+              required
+              value={participant.livingAt}
+              onChange={(event) =>
+                updateParticipant(
+                  "livingAt",
+                  event.target.value
+                )
+              }
+              className={selectClass}
+            >
+              <option value="">
+                Select where you live
+              </option>
+
+              {LIVING_OPTIONS.map(
+                (option) => (
+                  <option
+                    key={option}
+                    value={option}
+                  >
+                    {option}
+                  </option>
+                )
+              )}
+            </select>
+          </FormField>
+
+          {error && (
+            <div className="sm:col-span-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-700">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="sm:col-span-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting
+              ? "Starting assessment..."
+              : "Start assessment"}
+          </button>
+        </form>
+      </Shell>
+    );
+  }
+
+  /* =======================================================
+     TEST SCREEN
+     ======================================================= */
+
+  const currentAnswer =
+    currentQuestion
+      ? answers[currentQuestion.id]
+      : null;
+
+  const currentQuestionNumber =
+    questions.findIndex(
+      (question) =>
+        question.id ===
+        currentQuestion?.id
+    ) + 1;
+
+  const currentNonEmptySectionPosition =
+    nonEmptySections.findIndex(
+      ({ index }) =>
+        index === currentSectionIndex
+    );
+
+  const isLastQuestion =
+    currentNonEmptySectionPosition ===
+    nonEmptySections.length - 1 &&
+    currentQuestionIndex ===
+    currentQuestions.length - 1;
+
+  const timerDanger =
+    remainingSeconds !== null &&
+    remainingSeconds <= 300;
+
+  /* =======================================================
+     EMPTY TEST SAFETY
+     ======================================================= */
+
+  if (!questions.length) {
+    return (
+      <Shell>
+        <div className="text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-2xl">
+            !
+          </div>
+
+          <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-amber-600">
+            3Q Online Assessment
+          </p>
+
+          <h1 className="mt-3 text-3xl font-black text-slate-950">
+            Questions are not available
+          </h1>
+
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+            The assessment has been published,
+            but no questions have been added yet.
+            Please contact the administrator.
+          </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/")
+            }
+            className="mt-7 rounded-xl bg-slate-950 px-6 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+          >
+            Return to website
+          </button>
+        </div>
+      </Shell>
+    );
+  }
+
+  /* =======================================================
+     TEST UI
+     ======================================================= */
+
+  return (
+    <Shell wide>
+      {/* HEADER */}
+
+      <div className="sticky top-3 z-20 rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-sm backdrop-blur">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
+              {assessment.title}
+            </p>
+
+            <h1 className="mt-1 text-xl font-black text-slate-950">
+              3Q Online Assessment
+            </h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="rounded-xl bg-slate-100 px-4 py-2.5">
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
+                Progress
+              </p>
+
+              <p className="mt-0.5 text-sm font-black text-slate-900">
+                {answeredCount}/
+                {questions.length}{" "}
+                answered
+              </p>
+            </div>
+
+            <div
+              className={`rounded-xl px-4 py-2.5 ${timerDanger
+                  ? "bg-red-50 text-red-700"
+                  : "bg-emerald-50 text-emerald-700"
+                }`}
+            >
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] opacity-60">
+                Time remaining
+              </p>
+
+              <p className="mt-0.5 font-mono text-lg font-black">
+                {remainingSeconds !==
+                  null
+                  ? formatTime(
+                    remainingSeconds
+                  )
+                  : "--:--"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ERROR */}
+
+      {error && (
+        <div className="mt-5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* SECTION NAVIGATION */}
+
+      <div className="mt-6 overflow-x-auto">
+        <div className="flex min-w-max gap-2">
+          {sections.map(
+            (
+              section,
+              sectionIndex
+            ) => {
+              const sectionQuestions =
+                section.questions || [];
+
+              const sectionAnswered =
+                sectionQuestions.filter(
+                  (question) =>
+                    isAnswerProvided(
+                      answers[
+                      question.id
+                      ]
+                    )
+                ).length;
+
+              const active =
+                sectionIndex ===
+                currentSectionIndex;
+
+              const disabled =
+                sectionQuestions.length ===
+                0;
+
+              return (
+                <button
+                  type="button"
+                  key={section.id}
+                  disabled={disabled}
+                  onClick={() => {
+                    if (disabled) {
+                      return;
+                    }
+
+                    setCurrentSectionIndex(
+                      sectionIndex
+                    );
+
+                    setCurrentQuestionIndex(
+                      0
+                    );
+
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth"
+                    });
+                  }}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-black transition ${active
+                      ? "bg-slate-950 text-white"
+                      : disabled
+                        ? "cursor-not-allowed bg-slate-100 text-slate-300"
+                        : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
+                    }`}
+                >
+                  {section.name}
+
+                  <span
+                    className={`ml-2 rounded-full px-2 py-0.5 text-[10px] ${active
+                        ? "bg-white/15"
+                        : "bg-slate-100"
+                      }`}
+                  >
+                    {sectionAnswered}/
+                    {sectionQuestions.length}
+                  </span>
+                </button>
+              );
+            }
+          )}
+        </div>
+      </div>
+
+      {/* QUESTION NAVIGATOR */}
+
+      {currentSection &&
+        currentQuestions.length > 0 && (
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-white p-4">
+            <div className="flex flex-wrap gap-2">
+              {currentQuestions.map(
+                (
+                  question,
+                  questionIndex
+                ) => {
+                  const answered =
+                    isAnswerProvided(
+                      answers[
+                      question.id
+                      ]
+                    );
+
+                  const active =
+                    questionIndex ===
+                    currentQuestionIndex;
+
+                  return (
+                    <button
+                      type="button"
+                      key={question.id}
+                      onClick={() =>
+                        jumpToQuestion(
+                          currentSectionIndex,
+                          questionIndex
+                        )
+                      }
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-black transition ${active
+                          ? "bg-emerald-600 text-white"
+                          : answered
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                        }`}
+                    >
+                      {questionIndex + 1}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          </div>
+        )}
+
+      {/* QUESTION */}
+
+      {currentQuestion ? (
+        <article className="mt-6 rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
+                {currentSection?.name}
+              </p>
+
+              <p className="mt-1 text-sm font-bold text-slate-500">
+                Question{" "}
+                {currentQuestionNumber}{" "}
+                of{" "}
+                {questions.length}
+              </p>
+            </div>
+
+            <div className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black uppercase tracking-[0.1em] text-slate-500">
+              {getQuestionType(
+                currentQuestion
+              ) === "mcq"
+                ? "MCQ"
+                : getQuestionType(
+                  currentQuestion
+                ) === "short_answer"
+                  ? "Short Answer"
+                  : "Long Answer"}
+            </div>
+          </div>
+
+          <div className="mt-7">
+            <h2 className="text-xl font-black leading-8 text-slate-950 sm:text-2xl">
+              {currentQuestion.questionText}
+            </h2>
+
+            {currentQuestion.questionImageUrl && (
+              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+                <img
+                  src={
+                    currentQuestion.questionImageUrl
+                  }
+                  alt={`Question ${currentQuestion.questionNumber}`}
+                  className="max-h-[500px] w-full object-contain"
+                  onError={(event) => {
+                    event.currentTarget.style.display =
+                      "none";
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="mt-2 text-xs font-bold text-slate-400">
+              {currentQuestion.marks}{" "}
+              {Number(
+                currentQuestion.marks
+              ) === 1
+                ? "mark"
+                : "marks"}
+            </div>
+          </div>
+
+          {/* MCQ */}
+
+          {getQuestionType(
+            currentQuestion
+          ) === "mcq" && (
+              <div className="mt-7 grid gap-3">
+                {(
+                  currentQuestion.options ||
+                  []
+                ).map((option) => {
+                  const selected =
+                    Number(
+                      currentAnswer?.selectedOptionId
+                    ) ===
+                    Number(option.id);
+
+                  return (
+                    <button
+                      type="button"
+                      key={option.id}
+                      disabled={
+                        submitting ||
+                        savingQuestionId ===
+                        currentQuestion.id
+                      }
+                      onClick={() =>
+                        chooseAnswer(
+                          currentQuestion,
+                          option.id
+                        )
+                      }
+                      className={`flex w-full items-start gap-4 rounded-2xl border p-4 text-left transition ${selected
+                          ? "border-emerald-500 bg-emerald-50"
+                          : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                        } disabled:cursor-not-allowed disabled:opacity-60`}
+                    >
+                      <span
+                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black ${selected
+                            ? "bg-emerald-600 text-white"
+                            : "bg-slate-100 text-slate-600"
+                          }`}
+                      >
+                        {option.key}
+                      </span>
+
+                      <span className="pt-1 text-sm font-semibold leading-6 text-slate-800">
+                        {option.text}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+          {/* SHORT ANSWER */}
+
+          {getQuestionType(
+            currentQuestion
+          ) === "short_answer" && (
+              <div className="mt-7">
+                <textarea
+                  rows={5}
+                  value={
+                    currentAnswer?.answerText ||
+                    ""
+                  }
+                  onChange={(event) =>
+                    updateTextAnswer(
+                      currentQuestion.id,
+                      event.target.value
+                    )
+                  }
+                  onBlur={() =>
+                    handleTextBlur(
+                      currentQuestion
+                    )
+                  }
+                  disabled={submitting}
+                  placeholder="Write your answer here..."
+                  className="w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-slate-50"
+                />
+
+                <p className="mt-2 text-xs font-semibold text-slate-400">
+                  Your answer is saved when you
+                  leave this field.
+                </p>
+              </div>
+            )}
+
+          {/* LONG ANSWER */}
+
+          {getQuestionType(
+            currentQuestion
+          ) === "long_answer" && (
+              <div className="mt-7">
+                <textarea
+                  rows={10}
+                  value={
+                    currentAnswer?.answerText ||
+                    ""
+                  }
+                  onChange={(event) =>
+                    updateTextAnswer(
+                      currentQuestion.id,
+                      event.target.value
+                    )
+                  }
+                  onBlur={() =>
+                    handleTextBlur(
+                      currentQuestion
+                    )
+                  }
+                  disabled={submitting}
+                  placeholder="Write your detailed answer here..."
+                  className="w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:bg-slate-50"
+                />
+
+                <p className="mt-2 text-xs font-semibold text-slate-400">
+                  Your answer is saved when you
+                  leave this field.
+                </p>
+              </div>
+            )}
+
+          {/* NAVIGATION */}
+
+          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              disabled={
+                submitting ||
+                (
+                  currentSectionIndex ===
+                  nonEmptySections[0]?.index &&
+                  currentQuestionIndex ===
+                  0
+                )
+              }
+              onClick={
+                goToPreviousQuestion
+              }
+              className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              ← Previous
+            </button>
+
+            <div className="text-center text-xs font-bold text-slate-400">
+              {savingQuestionId ===
+                currentQuestion.id
+                ? "Saving answer..."
+                : isAnswerProvided(
+                  currentAnswer
+                )
+                  ? "Answer saved"
+                  : "Not answered"}
+            </div>
+
+            {!isLastQuestion ? (
+              <button
+                type="button"
+                disabled={
+                  submitting ||
+                  savingQuestionId !==
+                  null
+                }
+                onClick={
+                  goToNextQuestion
+                }
+                className="rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next →
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={
+                  submitting ||
+                  savingQuestionId !==
+                  null
+                }
+                onClick={() =>
+                  handleSubmit(false)
+                }
+                className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {submitting
+                  ? "Submitting..."
+                  : "Submit assessment"}
+              </button>
+            )}
+          </div>
+        </article>
+      ) : (
+        <div className="mt-6 rounded-[2rem] border border-amber-100 bg-amber-50 p-8 text-center">
+          <h2 className="text-xl font-black text-slate-950">
+            No questions in this section
+          </h2>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            This section does not contain
+            questions yet. Please select another
+            section.
+          </p>
+        </div>
+      )}
+
+      {/* BOTTOM SUBMIT */}
+
+      <div className="mt-6 flex justify-center">
+        <button
+          type="button"
+          disabled={
+            submitting ||
+            savingQuestionId !==
+            null
+          }
+          onClick={() =>
+            handleSubmit(false)
+          }
+          className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-black text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {submitting
+            ? "Submitting..."
+            : "Submit assessment"}
+        </button>
+      </div>
+    </Shell>
+  );
+}
+
+/* =========================================================
+   REUSABLE UI
+   ========================================================= */
+
+function Shell({
+  children,
+  wide = false
+}) {
+  return (
+    <main className="min-h-screen bg-[#f5efe6] px-4 py-6 sm:px-6 sm:py-10">
+      <div
+        className={`mx-auto ${wide
+            ? "max-w-6xl"
+            : "max-w-4xl"
+          }`}
+      >
+        <div className="rounded-[2rem] bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8 lg:p-10">
+          {children}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function LoadingState({
+  text
+}) {
+  return (
+    <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600" />
+
+      <p className="mt-5 font-bold text-slate-500">
+        {text}
+      </p>
+    </div>
+  );
+}
+
+function FormField({
+  label,
+  required = false,
+  children
+}) {
+  return (
+    <label className="text-sm font-bold text-slate-700">
+      <span>
+        {label}
+
+        {required && (
+          <span className="ml-1 text-red-500">
+            *
+          </span>
+        )}
+      </span>
+
+      {children}
+    </label>
+  );
+}
+
+function ResultStat({
+  label,
+  value
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+      <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
+        {label}
+      </p>
+
+      <p className="mt-2 text-2xl font-black text-slate-950">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+/* =========================================================
+   FORM STYLES
+   ========================================================= */
+
+const inputClass =
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";
+
+const selectClass =
+  "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10";

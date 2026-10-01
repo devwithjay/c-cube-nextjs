@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+      <rect width="900" height="650" fill="#d1fae5"/>
+      <circle cx="130" cy="100" r="75" fill="#059669" opacity=".12"/>
+      <circle cx="780" cy="560" r="130" fill="#059669" opacity=".10"/>
+      <rect x="80" y="150" width="740" height="360" rx="50" fill="#ffffff" opacity=".72"/>
+      <text x="450" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="74" font-weight="900" fill="#059669">STUDY</text>
+      <text x="450" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#334155">EVENT PHOTO PLACEHOLDER</text>
+      <text x="450" y="415" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#64748b">Replace this image in public/assets/events/</text>
+    </svg>
