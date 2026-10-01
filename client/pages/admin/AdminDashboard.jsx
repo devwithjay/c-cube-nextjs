@@ -123,21 +123,21 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5efe6]">
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* =====================================================
           HEADER
          ===================================================== */}
-      <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
 
           {/* Brand */}
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.22em] text-emerald-600">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-primary">
               C Cube Admin
             </p>
 
-            <h1 className="mt-1 font-display text-2xl font-black tracking-[-0.03em] text-slate-950">
+            <h1 className="mt-1 font-display text-2xl font-black tracking-[-0.03em] text-foreground">
               Assessment Management
             </h1>
           </div>
@@ -149,7 +149,7 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={openSettings}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+              className="rounded-xl border bg-card px-4 py-2.5 text-sm font-bold text-card-foreground transition hover:bg-muted"
             >
               Settings
             </button>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800"
+              className="rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
             >
               Logout
             </button>
@@ -176,15 +176,15 @@ export default function AdminDashboard() {
         {/* Page Heading */}
         <div className="mb-8">
 
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
             Dashboard
           </p>
 
-          <h2 className="mt-2 font-display text-4xl font-black tracking-[-0.04em] text-slate-950">
+          <h2 className="mt-2 font-display text-4xl font-black tracking-[-0.04em] text-foreground">
             3Q Assessments
           </h2>
 
-          <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
             Manage assessment versions, sections,
             questions, and publication status.
           </p>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
           <button
             type="button"
             onClick={() => setShowCreateForm((current) => !current)}
-            className="mt-5 rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+            className="mt-5 rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground transition hover:opacity-90"
           >
             {showCreateForm ? "Cancel" : "Create assessment"}
           </button>
@@ -407,19 +407,17 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Assessment Actions */}
-                    {isDraft && (
-                      <div className="mt-6 flex gap-3">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openAssessment(test.id)
-                          }
-                          className="flex-1 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
-                        >
-                          Manage Assessment
-                        </button>
-                      </div>
-                    )}
+                    <div className="mt-6 flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openAssessment(test.id)
+                        }
+                        className="flex-1 rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
+                      >
+                        Edit Assessment
+                      </button>
+                    </div>
 
                     <button
                       type="button"
@@ -443,8 +441,22 @@ export default function AdminDashboard() {
 
                     {/* Published */}
                     {isPublished && (
-                      <div className="mt-6 rounded-xl bg-emerald-50 px-4 py-3 text-center text-xs font-bold text-emerald-700">
-                        Published assessment
+                      <div className="mt-6 flex gap-2">
+                        <div className="flex-1 rounded-xl bg-emerald-50 px-4 py-3 text-center text-xs font-bold text-emerald-700 flex items-center justify-center">
+                          Published assessment
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const link = window.location.origin;
+                            navigator.clipboard.writeText(link);
+                            alert("Link copied to clipboard: " + link);
+                          }}
+                          className="rounded-xl bg-blue-100 px-4 py-3 text-xs font-bold text-blue-700 transition hover:bg-blue-200"
+                          title="Copy Public Link"
+                        >
+                          Copy Link
+                        </button>
                       </div>
                     )}
 

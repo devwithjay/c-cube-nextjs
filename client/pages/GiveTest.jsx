@@ -67,7 +67,8 @@ const initialParticipant = {
   collegeEmail: "",
   mobileNumber: "",
   campus: "",
-  livingAt: ""
+  livingAt: "",
+  gender: ""
 };
 
 /* =========================================================
@@ -265,7 +266,7 @@ export default function GiveTest() {
 
         setError(
           requestError?.message ||
-          "No assessment is currently available."
+          "Assessment will be live on 2nd of October, from 6 AM to 11 PM."
         );
       } finally {
         if (mounted) {
@@ -955,105 +956,34 @@ export default function GiveTest() {
      ======================================================= */
 
   if (result) {
-    const percentage =
-      result.totalQuestions
-        ? Math.round(
-          (result.totalScore /
-            result.totalQuestions) *
-          100
-        )
-        : 0;
+    const whatsappLink = participant.gender === 'female' 
+      ? "https://chat.whatsapp.com/FI23Jnp9pNZFObYHApsGfQ"
+      : "https://chat.whatsapp.com/DErjW6JXHC71L5RqTduT72";
 
     return (
       <Shell>
-        <div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">
+        <div className="flex flex-col items-center justify-center text-center py-12">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-4xl text-blue-600 mb-6 shadow-sm">
             ✓
           </div>
 
-          <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
-            Assessment submitted
-          </p>
-
-          <h1 className="mt-3 font-display text-4xl font-black tracking-[-0.04em] text-slate-950">
-            Your result
+          <h1 className="font-display text-4xl font-black tracking-tight text-slate-950 mb-4">
+            Test Submitted Successfully!
           </h1>
 
-          <p className="mt-4 leading-7 text-slate-600">
-            Your responses have been
-            recorded successfully.
+          <p className="text-lg leading-7 text-slate-600 max-w-xl mb-8">
+            Thank you for completing the 3Q Online Assessment. Your responses have been recorded.
+            To receive your results and stay updated on further steps, please join your designated WhatsApp group below.
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <ResultStat
-              label="Score"
-              value={`${result.totalScore}/${result.totalQuestions}`}
-            />
-
-            <ResultStat
-              label="Percentage"
-              value={`${percentage}%`}
-            />
-
-            <ResultStat
-              label="Attempted"
-              value={`${result.attemptedQuestions}/${result.totalQuestions}`}
-            />
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-5">
-            <h2 className="text-lg font-black text-slate-950">
-              Section scores
-            </h2>
-
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
-              {Object.entries(
-                result.sections || {}
-              ).map(
-                ([section, score]) => (
-                  <div
-                    key={section}
-                    className="rounded-xl bg-white px-4 py-4"
-                  >
-                    <p className="text-xs font-black uppercase tracking-[0.15em] text-slate-400">
-                      {section}
-                    </p>
-
-                    <p className="mt-1 text-2xl font-black text-slate-950">
-                      {score}
-                    </p>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-
-          {questions.some(
-            (question) =>
-              getQuestionType(
-                question
-              ) !== "mcq"
-          ) && (
-              <div className="mt-5 rounded-2xl border border-amber-100 bg-amber-50 p-5">
-                <p className="text-sm font-semibold leading-6 text-amber-800">
-                  Written responses have been
-                  recorded. Short-answer and
-                  long-answer questions may require
-                  manual evaluation according to the
-                  assessment configuration.
-                </p>
-              </div>
-            )}
-
-          <button
-            type="button"
-            onClick={() =>
-              navigate("/")
-            }
-            className="mt-8 w-full rounded-xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:bg-slate-800"
+          <a 
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-md hover:bg-blue-700 transition-all hover:-translate-y-1"
           >
-            Return to website
-          </button>
+            Join WhatsApp Group for Results
+          </a>
         </div>
       </Shell>
     );
@@ -1315,6 +1245,27 @@ export default function GiveTest() {
                   </option>
                 )
               )}
+            </select>
+          </FormField>
+
+          <FormField
+            label="Gender"
+            required
+          >
+            <select
+              required
+              value={participant.gender}
+              onChange={(event) =>
+                updateParticipant(
+                  "gender",
+                  event.target.value
+                )
+              }
+              className={selectClass}
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
           </FormField>
 
