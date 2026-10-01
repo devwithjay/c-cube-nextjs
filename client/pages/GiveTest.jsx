@@ -1439,11 +1439,11 @@ export default function GiveTest() {
 
       <div className="mt-6 overflow-x-auto">
         <div className="flex min-w-max gap-2">
-          {sections.map(
-            (
+          {nonEmptySections.map(
+            ({
               section,
-              sectionIndex
-            ) => {
+              index: sectionIndex
+            }) => {
               const sectionQuestions =
                 section.questions || [];
 
@@ -1598,13 +1598,13 @@ export default function GiveTest() {
             </h2>
 
             {currentQuestion.questionImageUrl && (
-              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+              <div className="mt-6 flex justify-center rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:p-6">
                 <img
                   src={
                     currentQuestion.questionImageUrl
                   }
                   alt={`Question ${currentQuestion.questionNumber}`}
-                  className="max-h-[500px] w-full object-contain"
+                  className="max-h-[280px] sm:max-h-[360px] max-w-full object-contain"
                   onError={(event) => {
                     event.currentTarget.style.display =
                       "none";
