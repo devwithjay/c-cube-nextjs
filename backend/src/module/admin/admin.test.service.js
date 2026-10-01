@@ -120,6 +120,9 @@ export async function createNewTest(
       durationSeconds:
         data.durationSeconds,
 
+      liveMessage:
+        data.liveMessage,
+
       version:
         1
 

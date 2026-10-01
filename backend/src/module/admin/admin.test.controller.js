@@ -134,7 +134,8 @@ export async function createTest(
     const {
       title,
       description,
-      durationSeconds
+      durationSeconds,
+      liveMessage
     } = req.body;
 
 
@@ -166,7 +167,10 @@ export async function createTest(
         durationSeconds:
           Number(
             durationSeconds
-          )
+          ),
+
+        liveMessage:
+          liveMessage ? String(liveMessage) : null
 
       });
 
@@ -237,7 +241,8 @@ export async function updateTest(
     const {
       title,
       description,
-      durationSeconds
+      durationSeconds,
+      liveMessage
     } = req.body;
 
 
