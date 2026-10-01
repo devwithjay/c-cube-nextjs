@@ -178,10 +178,14 @@ function createApp() {
         const isConfiguredFrontend =
           origin === env.FRONTEND_URL;
 
+        const isVercelOrigin =
+          origin && origin.endsWith(".vercel.app");
+
         if (
           isNoOrigin ||
           isLocalDevelopmentOrigin ||
-          isConfiguredFrontend
+          isConfiguredFrontend ||
+          isVercelOrigin
         ) {
           return callback(null, true);
         }
