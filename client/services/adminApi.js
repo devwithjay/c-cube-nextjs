@@ -428,3 +428,13 @@ export async function deleteSectionQuestion(
   );
 
 }
+export async function unpublishAdminTest(
+  testId
+) {
+  return adminRequest(
+    `/admin/tests/${testId}/unpublish`,
+    {
+      method: "POST"
+    }
+  );
+}

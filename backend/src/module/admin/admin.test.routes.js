@@ -1,6 +1,8 @@
-import { Router } from "express";
+import {
+  unpublishTest, Router } from "express";
 
 import {
+  unpublishTest,
   listTests,
   getTestById,
   listTestResults,
@@ -14,6 +16,7 @@ import {
 } from "./admin.test.controller.js";
 
 import {
+  unpublishTest,
   requireAdmin
 } from "./admin.middleware.js";
 
@@ -131,5 +134,11 @@ router.post(
   closeTest
 );
 
+
+
+router.post(
+  "/:testId/unpublish",
+  unpublishTest
+);
 
 export default router;

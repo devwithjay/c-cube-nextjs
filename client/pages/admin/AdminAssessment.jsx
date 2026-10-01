@@ -10,6 +10,7 @@ import {
   getSectionQuestions,
   getTestSections,
   publishAdminTest,
+  unpublishAdminTest,
   updateAdminTest,
   updateSectionQuestion,
   updateTestSection
@@ -933,21 +934,35 @@ export default function AdminAssessment() {
 
             {test.status ===
               "published" && (
+              <>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() =>
+                    changeStatus(
+                      unpublishAdminTest,
+                      "Assessment unpublished."
+                    )
+                  }
+                  className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-3 text-sm font-black text-amber-600 hover:bg-amber-100 disabled:opacity-50 dark:border-amber-900/50 dark:bg-amber-900/20 dark:text-amber-500"
+                >
+                  Unpublish
+                </button>
 
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() =>
-                  changeStatus(
-                    closeAdminTest,
-                    "Assessment closed."
-                  )
-                }
-                className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-primary-foreground hover:bg-red-700 disabled:opacity-50"
-              >
-                Close assessment
-              </button>
-
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() =>
+                    changeStatus(
+                      closeAdminTest,
+                      "Assessment closed."
+                    )
+                  }
+                  className="rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-primary-foreground hover:bg-red-700 disabled:opacity-50"
+                >
+                  Close assessment
+                </button>
+              </>
             )}
 
           </div>

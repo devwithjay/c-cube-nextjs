@@ -403,3 +403,18 @@ export async function reviewRetestRequest(
 
   return updateRetestRequest(requestId, status, adminId);
 }
+export async function unpublishTest(
+  testId
+) {
+  const updatedTest =
+    await repository.unpublishTest(
+      testId
+    );
+  if (!updatedTest) {
+    throw createServiceError(
+      "Test not found or could not be unpublished.",
+      404
+    );
+  }
+  return updatedTest;
+}

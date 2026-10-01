@@ -372,3 +372,20 @@ export async function updateRetestRequest(
     [requestId]
   );
 }
+export async function unpublishTest(
+  testId
+) {
+  const result = await db.query(
+    `
+      UPDATE three_q_tests
+      SET
+        status = 'draft',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE
+        id = $1
+      RETURNING *
+    `,
+    [testId]
+  );
+  return result.rows[0] || null;
+}

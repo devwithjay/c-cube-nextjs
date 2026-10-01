@@ -587,3 +587,26 @@ export async function reviewRetestRequest(
     next(error);
   }
 }
+export async function unpublishTest(
+  req,
+  res,
+  next
+) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId) || testId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid test ID."
+      });
+    }
+    const test = await adminTestService.unpublishTest(testId);
+    return res.status(200).json({
+      success: true,
+      message: "Test successfully unpublished.",
+      data: test
+    });
+  } catch (error) {
+    next(error);
+  }
+}
