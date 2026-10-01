@@ -195,8 +195,6 @@ export function createApp() {
   app.use("/api/admin/tests", adminSectionRoutes);
   app.use("/api/admin/sections", adminQuestionRoutes);
   app.use("/api/admin/questions", adminQuestionRoutes);
-  
-  import("./debug.js").then(m => app.get("/api/debug", m.debugAnswers));
 
   /*
   |--------------------------------------------------------------------------
