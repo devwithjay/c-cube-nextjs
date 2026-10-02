@@ -469,6 +469,11 @@ export default function GiveTest() {
   async function handleStart(event) {
     event.preventDefault();
 
+    if (!participant.name || !participant.branch || !participant.division || !participant.prn || !participant.collegeEmail || !participant.mobileNumber || !participant.campus || !participant.livingAt || !participant.gender) {
+      setError("Please fill all the required fields, including gender, branch, and campus.");
+      return;
+    }
+
     try {
       setSubmitting(true);
       setError("");
