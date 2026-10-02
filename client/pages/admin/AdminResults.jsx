@@ -12,7 +12,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getAdminTest,
   getAdminTestResults,
-  getTestSections
+  getTestSections,
+  updateParticipantDetails
 } from "../../services/adminApi.js";
 
 const baseColumns = [
@@ -40,6 +41,9 @@ export default function AdminResults() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedResult, setSelectedResult] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({});
+  const [savingParticipant, setSavingParticipant] = useState(false);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -98,6 +102,47 @@ export default function AdminResults() {
     URL.revokeObjectURL(url);
   }
 
+  function handleEditClick() {
+    setEditForm({
+      name: selectedResult.name || "",
+      collegeEmail: selectedResult.college_email || "",
+      mobileNumber: selectedResult.mobile_number || "",
+      livingAt: selectedResult.living_at || "",
+      gender: selectedResult.gender || "",
+      prn: selectedResult.prn || "",
+      campus: selectedResult.campus || "",
+      branch: selectedResult.branch || "",
+      division: selectedResult.division || ""
+    });
+    setIsEditing(true);
+  }
+
+  async function handleSaveEdit() {
+    try {
+      setSavingParticipant(true);
+      await updateParticipantDetails(selectedResult.participant_id, editForm);
+      const updatedResult = { 
+        ...selectedResult, 
+        name: editForm.name,
+        college_email: editForm.collegeEmail,
+        mobile_number: editForm.mobileNumber,
+        living_at: editForm.livingAt,
+        gender: editForm.gender,
+        prn: editForm.prn,
+        campus: editForm.campus,
+        branch: editForm.branch,
+        division: editForm.division
+      };
+      setSelectedResult(updatedResult);
+      setResults(results.map(r => r.id === updatedResult.id ? updatedResult : r));
+      setIsEditing(false);
+    } catch (e) {
+      alert("Failed to save: " + e.message);
+    } finally {
+      setSavingParticipant(false);
+    }
+  }
+
   if (loading) {
     return <PageShell><p className="font-bold text-muted-foreground">Loading responses...</p></PageShell>;
   }
@@ -125,28 +170,63 @@ export default function AdminResults() {
 
       {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([key, label]) => <th key={key} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result) => <tr key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
 
-      <Dialog open={!!selectedResult} onOpenChange={(open) => !open && setSelectedResult(null)}>
+      <Dialog open={!!selectedResult} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedResult(null);
+          setIsEditing(false);
+        }
+      }}>
         <DialogContent className="max-w-2xl bg-card text-card-foreground border-border max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black">{selectedResult?.name}'s Submission</DialogTitle>
+            <DialogTitle className="text-2xl font-black flex justify-between items-center pr-8">
+              <span>{selectedResult?.name}'s Submission</span>
+              {!isEditing ? (
+                <button type="button" onClick={handleEditClick} className="text-sm px-4 py-2 bg-primary text-primary-foreground rounded-lg transition hover:opacity-90">Edit</button>
+              ) : (
+                <div className="flex gap-2">
+                  <button type="button" disabled={savingParticipant} onClick={handleSaveEdit} className="text-sm px-4 py-2 bg-emerald-600 text-white rounded-lg transition hover:bg-emerald-700 disabled:opacity-50">Save</button>
+                  <button type="button" disabled={savingParticipant} onClick={() => setIsEditing(false)} className="text-sm px-4 py-2 bg-muted text-foreground rounded-lg transition hover:bg-muted/80">Cancel</button>
+                </div>
+              )}
+            </DialogTitle>
           </DialogHeader>
           {selectedResult && (
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h3 className="font-bold text-lg border-b border-border pb-2 text-primary">Personal Details</h3>
                 
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Email</span><span className="font-semibold text-foreground">{selectedResult.college_email || "-"}</span></div>
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Mobile Number</span><span className="font-semibold text-foreground">{selectedResult.mobile_number || "-"}</span></div>
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Living At</span><span className="font-semibold text-foreground">{selectedResult.living_at || "-"}</span></div>
+                {isEditing && (
+                  <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Name</span><input value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /></div>
+                )}
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Email</span>
+                  {isEditing ? <input value={editForm.collegeEmail} onChange={e => setEditForm({...editForm, collegeEmail: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.college_email || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Mobile Number</span>
+                  {isEditing ? <input value={editForm.mobileNumber} onChange={e => setEditForm({...editForm, mobileNumber: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.mobile_number || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Living At</span>
+                  {isEditing ? <input value={editForm.livingAt} onChange={e => setEditForm({...editForm, livingAt: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.living_at || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Gender</span>
+                  {isEditing ? <input value={editForm.gender} onChange={e => setEditForm({...editForm, gender: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.gender || "-"}</span>}
+                </div>
               </div>
               
               <div className="space-y-4">
                 <h3 className="font-bold text-lg border-b border-border pb-2 text-primary">Academic Details</h3>
                 
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">PRN</span><span className="font-semibold text-foreground">{selectedResult.prn || "-"}</span></div>
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Campus</span><span className="font-semibold text-foreground">{selectedResult.campus || "-"}</span></div>
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Branch</span><span className="font-semibold text-foreground">{selectedResult.branch || "-"}</span></div>
-                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">Division</span><span className="font-semibold text-foreground">{selectedResult.division || "-"}</span></div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">PRN</span>
+                  {isEditing ? <input value={editForm.prn} onChange={e => setEditForm({...editForm, prn: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.prn || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Campus</span>
+                  {isEditing ? <input value={editForm.campus} onChange={e => setEditForm({...editForm, campus: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.campus || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Branch</span>
+                  {isEditing ? <input value={editForm.branch} onChange={e => setEditForm({...editForm, branch: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.branch || "-"}</span>}
+                </div>
+                <div><span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">Division</span>
+                  {isEditing ? <input value={editForm.division} onChange={e => setEditForm({...editForm, division: e.target.value})} className="w-full bg-background border border-border rounded px-3 py-1.5 text-sm outline-none focus:border-primary" /> : <span className="font-semibold text-foreground">{selectedResult.division || "-"}</span>}
+                </div>
               </div>
               
               <div className="col-span-1 md:col-span-2 space-y-4 mt-2">

@@ -449,3 +449,24 @@ export async function deleteTestSection(
     }
   );
 }
+
+export async function updateParticipantDetails(participantId, data) {
+  const token = getAdminToken();
+
+  const response = await fetch(`${API_BASE_URL}/admin/tests/participants/${participantId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+
+  const responseData = await response.json();
+
+  if (!response.ok || !responseData.success) {
+    throw new Error(responseData.message || "Failed to update participant.");
+  }
+
+  return responseData;
+}

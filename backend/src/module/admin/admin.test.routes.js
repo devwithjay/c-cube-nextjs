@@ -11,7 +11,8 @@ import {
   updateTest,
   publishTest,
   closeTest,
-  deleteTest
+  deleteTest,
+  updateParticipantDetails
 } from "./admin.test.controller.js";
 
 import {
@@ -137,6 +138,11 @@ router.post(
 router.post(
   "/:testId/unpublish",
   unpublishTest
+);
+
+router.put(
+  "/participants/:participantId",
+  updateParticipantDetails
 );
 
 export default router;

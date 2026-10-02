@@ -614,3 +614,29 @@ export async function unpublishTest(
     next(error);
   }
 }
+
+export async function updateParticipantDetails(
+  req,
+  res,
+  next
+) {
+  try {
+    const participantId = Number(req.params.participantId);
+    if (!Number.isInteger(participantId) || participantId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid participant ID."
+      });
+    }
+
+    const { updateParticipant } = await import("./admin.test.repository.js");
+    await updateParticipant(participantId, req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "Participant details updated successfully."
+    });
+  } catch (error) {
+    next(error);
+  }
+}

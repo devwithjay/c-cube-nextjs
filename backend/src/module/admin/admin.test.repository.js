@@ -322,6 +322,7 @@ export async function findResultsByTestId(
     SELECT
       r.id,
       r.session_id,
+      p.id as participant_id,
       r.test_id,
       r.total_questions,
       r.attempted_questions,
@@ -431,4 +432,38 @@ export async function unpublishTest(
     [testId]
   );
   return result.rows[0] || null;
+}
+
+export async function updateParticipant(
+  participantId,
+  data
+) {
+  return run(
+    `
+    UPDATE three_q_participants
+    SET
+      name = COALESCE(?, name),
+      branch = COALESCE(?, branch),
+      division = COALESCE(?, division),
+      prn = COALESCE(?, prn),
+      college_email = COALESCE(?, college_email),
+      mobile_number = COALESCE(?, mobile_number),
+      campus = COALESCE(?, campus),
+      living_at = COALESCE(?, living_at),
+      gender = COALESCE(?, gender)
+    WHERE id = ?
+    `,
+    [
+      data.name ?? null,
+      data.branch ?? null,
+      data.division ?? null,
+      data.prn ?? null,
+      data.collegeEmail ?? null,
+      data.mobileNumber ?? null,
+      data.campus ?? null,
+      data.livingAt ?? null,
+      data.gender ?? null,
+      participantId
+    ]
+  );
 }
