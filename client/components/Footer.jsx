@@ -5,8 +5,8 @@ import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 export default function Footer() {
   return (
     <footer className="relative bg-[#09090b] px-6 py-20 text-white overflow-hidden flex flex-col items-center justify-center border-t border-white/5">
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30">
-        <TextHoverEffect text="CCUBE" />
+      <div className="absolute inset-0 flex items-center justify-center opacity-40">
+        <TextHoverEffect text="C CUBE" />
       </div>
       
       <div className="relative z-10 flex flex-col items-center text-center">

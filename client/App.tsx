@@ -8,6 +8,7 @@ import ColourfulText from "@/components/ui/colourful-text";
 import { Vortex } from "@/components/ui/vortex";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { useTheme } from "next-themes";
 
 /* ================================================================
@@ -488,15 +489,20 @@ export default function App() {
       </section>
 
       {/* ─── CONTACT / FOOTER ─── */}
-      <footer id="contact" className="bg-card pt-20 pb-10 border-t border-border/50 relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 relative z-10">
+      <footer id="contact" className="bg-card pt-32 pb-10 border-t border-border/50 relative overflow-hidden">
+        {/* Background hover text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-auto opacity-30 mt-[-40px]">
+          <TextHoverEffect text="C CUBE" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-6 relative z-10 pointer-events-none">
           <div className="flex flex-col items-center text-center mb-16">
-            <img src="/assets/ccubelogo.png" alt="C Cube" className="h-16 w-16 mb-6 object-contain" />
+            <img src="/assets/ccubelogo.png" alt="C Cube" className="h-16 w-16 mb-6 object-contain pointer-events-auto" />
             <h2 className="font-bold text-2xl text-foreground mb-3">C Cube — VIT Pune</h2>
             <p className="text-base text-muted-foreground max-w-md leading-relaxed mb-8">
               Empowering students through Character, Competence, and Culture.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 pointer-events-auto">
               <a href="https://www.instagram.com/ccubevitp/" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
@@ -509,7 +515,7 @@ export default function App() {
             </div>
           </div>
           
-          <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-auto">
             <p className="text-sm text-muted-foreground font-medium">
               &copy; {new Date().getFullYear()} C Cube. All rights reserved.
             </p>
