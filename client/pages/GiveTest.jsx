@@ -5,6 +5,8 @@ import {
 } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -1829,8 +1831,19 @@ function Shell({
   children,
   wide = false
 }) {
+  const { theme, setTheme } = useTheme();
+  
   return (
     <main className="min-h-screen bg-background px-4 py-6 sm:px-6 sm:py-10">
+      <div className="absolute top-4 right-4 z-50">
+        <button
+          type="button"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="rounded-full border border-slate-200 bg-card p-2.5 text-card-foreground shadow-sm transition hover:bg-muted dark:border-slate-800"
+        >
+          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        </button>
+      </div>
       <div
         className={`mx-auto ${wide
             ? "max-w-6xl"
