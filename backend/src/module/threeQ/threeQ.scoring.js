@@ -30,7 +30,7 @@ export function calculateThreeQScore(
   let section2Score = 0;
   let section3Score = 0;
 
-  const attemptedQuestions = answers.length;
+  const attemptedQuestions = new Set(answers.map((a) => a.question_id || a.questionId)).size;
 
   // Sort sections to determine the first 3 sections reliably (by sort_order or section_number)
   const sortedSections = [...sections].sort((a, b) => 

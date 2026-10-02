@@ -1535,7 +1535,7 @@ export default function GiveTest() {
                     currentQuestion.questionImageUrl
                   }
                   alt={`Question ${currentQuestion.questionNumber}`}
-                  className="max-h-[280px] sm:max-h-[360px] max-w-full object-contain"
+                  className="max-h-[280px] sm:max-h-[360px] max-w-full object-contain dark:invert"
                   onError={(event) => {
                     event.currentTarget.style.display =
                       "none";
@@ -1599,7 +1599,7 @@ export default function GiveTest() {
                         {option.key}
                       </span>
 
-                      <span className="pt-1 text-sm font-semibold leading-6 text-foreground">
+                      <span className={`pt-1 text-sm font-semibold leading-6 ${selected ? 'text-black' : 'text-foreground'}`}>
                         {option.text}
                       </span>
                     </button>
