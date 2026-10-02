@@ -53,12 +53,6 @@ export default function AdminResults() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  
-  const loadingMoreRef = useRef(loadingMore);
-  useEffect(() => { loadingMoreRef.current = loadingMore; }, [loadingMore]);
-  
-  const hasMoreRef = useRef(hasMore);
-  useEffect(() => { hasMoreRef.current = hasMore; }, [hasMore]);
   const [dynamicColumns, setDynamicColumns] = useState(baseColumns);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -69,16 +63,18 @@ export default function AdminResults() {
   const { theme, setTheme } = useTheme();
   const observer = useRef();
   const lastResultElementRef = useCallback(node => {
-    if (loadingMoreRef.current) return;
+    if (loadingMore) return;
     if (observer.current) observer.current.disconnect();
     if (!node) return;
+    
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMoreRef.current && !loadingMoreRef.current) {
+      if (entries[0].isIntersecting && hasMore) {
         setPage(prev => prev + 1);
       }
-    });
+    }, { rootMargin: "200px" });
+    
     observer.current.observe(node);
-  }, []);
+  }, [loadingMore, hasMore]);
 
   useEffect(() => {
     async function loadResults() {
