@@ -1324,7 +1324,7 @@ export default function GiveTest() {
     <Shell wide>
       {/* HEADER */}
 
-      <div className="sticky top-3 z-20 rounded-2xl border border-slate-100 bg-card/95 p-4 shadow-sm backdrop-blur">
+      <div className="rounded-2xl border border-slate-100 bg-card/95 p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600">
@@ -1348,27 +1348,31 @@ export default function GiveTest() {
                 answered
               </p>
             </div>
-
-            <div
-              className={`rounded-xl px-4 py-2.5 ${timerDanger
-                  ? "bg-red-50 text-red-700"
-                  : "bg-emerald-50 text-emerald-700"
-                }`}
-            >
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] opacity-60">
-                Time remaining
-              </p>
-
-              <p className="mt-0.5 font-mono text-lg font-black">
-                {remainingSeconds !==
-                  null
-                  ? formatTime(
-                    remainingSeconds
-                  )
-                  : "--:--"}
-              </p>
-            </div>
           </div>
+        </div>
+      </div>
+
+      {/* STICKY TIMER */}
+      
+      <div className="sticky top-3 z-20 mt-4 flex justify-end pointer-events-none">
+        <div
+          className={`pointer-events-auto rounded-xl px-4 py-2.5 shadow-sm backdrop-blur border border-slate-100/50 ${timerDanger
+              ? "bg-red-50 text-red-700"
+              : "bg-emerald-50 text-emerald-700"
+            }`}
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] opacity-60">
+            Time remaining
+          </p>
+
+          <p className="mt-0.5 font-mono text-lg font-black">
+            {remainingSeconds !==
+              null
+              ? formatTime(
+                remainingSeconds
+              )
+              : "--:--"}
+          </p>
         </div>
       </div>
 
