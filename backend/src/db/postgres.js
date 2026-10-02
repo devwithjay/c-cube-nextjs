@@ -11,6 +11,7 @@ export const pool = new Pool({
   password: process.env.DB_PASSWORD,
 
   max: 20,
+  min: 0,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
 });

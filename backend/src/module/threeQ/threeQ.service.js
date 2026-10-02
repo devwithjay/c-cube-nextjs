@@ -251,16 +251,6 @@ async function getOrCreateParticipant(data) {
   */
 
   if (existingByPRN) {
-    if (
-      String(existingByPRN.college_email).toLowerCase() !==
-      String(data.collegeEmail).toLowerCase()
-    ) {
-      throw createServiceError(
-        "This PRN is already registered with another email address.",
-        409
-      );
-    }
-
     return existingByPRN;
   }
 
@@ -271,10 +261,7 @@ async function getOrCreateParticipant(data) {
   */
 
   if (existingByEmail) {
-    throw createServiceError(
-      "This official email is already registered with another PRN.",
-      409
-    );
+    return existingByEmail;
   }
 
   /*

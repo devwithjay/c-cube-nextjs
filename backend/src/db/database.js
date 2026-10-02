@@ -76,7 +76,7 @@ const poolMin = Math.max(
   Number(
     databaseConfig.poolMin ||
       process.env.DB_POOL_MIN ||
-      5
+      0
   )
 );
 
