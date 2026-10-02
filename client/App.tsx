@@ -207,7 +207,7 @@ export default function App() {
             className="mx-auto mt-8 max-w-xl relative group"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 rounded-2xl blur-lg transition-all duration-500 group-hover:opacity-100 opacity-50"></div>
-            <div className="relative rounded-2xl border border-black/5 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-2xl p-4 sm:p-5 shadow-xl dark:shadow-2xl overflow-hidden">
+            <div className="relative rounded-2xl border border-black/5 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-2xl p-4 sm:p-5 shadow-sm dark:shadow-2xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
               
               <div className="flex flex-col items-center gap-3">
