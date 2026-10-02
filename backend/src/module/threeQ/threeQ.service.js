@@ -1005,8 +1005,10 @@ async function validateActiveSession(
     new Date(
       session.expires_at
     );
+    
+  const gracePeriodMs = 5 * 60 * 1000;
 
-  if (now >= expiresAt) {
+  if (now.getTime() > expiresAt.getTime() + gracePeriodMs) {
     await markSessionExpired(
       sessionId
     );
@@ -1599,10 +1601,8 @@ export async function submitTest(
     session.status ===
     "expired"
   ) {
-    throw createServiceError(
-      "This assessment session has expired.",
-      410
-    );
+    // If it's expired, we still allow them to submit whatever they managed to save
+    // before expiration. This ensures they get a score for their attempted questions.
   }
 
   /*
@@ -1619,7 +1619,9 @@ export async function submitTest(
       session.expires_at
     );
 
-  if (now >= expiresAt) {
+  const gracePeriodMs = 5 * 60 * 1000;
+
+  if (now.getTime() > expiresAt.getTime() + gracePeriodMs) {
     await markSessionExpired(
       sessionId
     );

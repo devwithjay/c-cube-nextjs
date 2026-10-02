@@ -1542,7 +1542,7 @@ export default function GiveTest() {
                     currentQuestion.questionImageUrl
                   }
                   alt={`Question ${currentQuestion.questionNumber}`}
-                  className="max-h-[280px] sm:max-h-[360px] max-w-full object-contain dark:invert"
+                  className="max-h-[280px] sm:max-h-[360px] max-w-full object-contain"
                   onError={(event) => {
                     event.currentTarget.style.display =
                       "none";
