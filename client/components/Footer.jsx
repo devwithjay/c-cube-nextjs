@@ -1,33 +1,42 @@
 import React from "react";
+import { Instagram, Linkedin, Mail } from "lucide-react";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-black/5 bg-slate-950 px-6 py-12 text-white">
-      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row md:items-end">
-        <div>
-          <div className="flex items-center gap-5">
-            <div className="grid h-16 w-16 place-items-center rounded-2xl border border-white/15 bg-white p-2">
-              <img
-                src="/assets/ccubelogo.png"
-                alt="C Cube logo"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <div className="h-10 w-px bg-white/20" />
-            <img
-              src="/assets/vit-logo-transparent.png"
-              alt="Vishwakarma Institute of Technology logo"
-              className="h-12 w-auto max-w-36 object-contain"
-            />
-          </div>
-          <p className="mt-5 max-w-md text-sm leading-6 text-white/55">
-            Character. Competence. Culture. A student-development platform at
-            VIT Pune.
-          </p>
+    <footer className="relative bg-[#09090b] px-6 py-20 text-white overflow-hidden flex flex-col items-center justify-center border-t border-white/5">
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30">
+        <TextHoverEffect text="CCUBE" />
+      </div>
+      
+      <div className="relative z-10 flex flex-col items-center text-center">
+        <div className="h-16 w-16 mb-6">
+          <img
+            src="/assets/ccubelogo.png"
+            alt="C Cube logo"
+            className="h-full w-full object-contain"
+          />
         </div>
-        <p className="text-sm text-white/40">
-          © {new Date().getFullYear()} C Cube. Built for student growth.
+        
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-3">
+          C Cube — VIT Pune
+        </h2>
+        
+        <p className="text-sm md:text-base text-white/60 mb-10 max-w-md">
+          Empowering students through Character, Competence, and Culture.
         </p>
+        
+        <div className="flex gap-4">
+          <a href="#" className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10">
+            <Instagram className="h-4 w-4 text-white/80" />
+          </a>
+          <a href="#" className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10">
+            <Linkedin className="h-4 w-4 text-white/80" />
+          </a>
+          <a href="mailto:ccube@vit.edu" className="h-10 w-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10">
+            <Mail className="h-4 w-4 text-white/80" />
+          </a>
+        </div>
       </div>
     </footer>
   );
