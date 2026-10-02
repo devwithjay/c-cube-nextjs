@@ -365,7 +365,9 @@ export async function deleteAssessment(
 }
 
 export async function getTestResults(
-  testId
+  testId,
+  page = 1,
+  limit = 30
 ) {
   const test = await findTestById(testId);
 
@@ -375,7 +377,15 @@ export async function getTestResults(
     throw error;
   }
 
-  return findResultsByTestId(testId);
+  const [results, totalCount] = await Promise.all([
+    findResultsByTestId(testId, page, limit),
+    countResultsByTestId(testId)
+  ]);
+
+  return {
+    results,
+    totalCount
+  };
 }
 
 export async function listRetestRequests(

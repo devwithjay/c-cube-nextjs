@@ -471,3 +471,11 @@ export async function updateParticipant(
     ]
   );
 }
+
+export async function countResultsByTestId(testId) {
+  const result = await get(
+    `SELECT COUNT(*) as total FROM three_q_results WHERE test_id = ?`,
+    [testId]
+  );
+  return Number(result?.total || 0);
+}

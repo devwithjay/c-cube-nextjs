@@ -49,9 +49,16 @@ export default function AdminResults() {
   const [test, setTest] = useState(null);
   const [sections, setSections] = useState([]);
   const [results, setResults] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  
+  const loadingMoreRef = useRef(loadingMore);
+  useEffect(() => { loadingMoreRef.current = loadingMore; }, [loadingMore]);
+  
+  const hasMoreRef = useRef(hasMore);
+  useEffect(() => { hasMoreRef.current = hasMore; }, [hasMore]);
   const [dynamicColumns, setDynamicColumns] = useState(baseColumns);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -62,15 +69,16 @@ export default function AdminResults() {
   const { theme, setTheme } = useTheme();
   const observer = useRef();
   const lastResultElementRef = useCallback(node => {
-    if (loadingMore) return;
+    if (loadingMoreRef.current) return;
     if (observer.current) observer.current.disconnect();
+    if (!node) return;
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries[0].isIntersecting && hasMoreRef.current && !loadingMoreRef.current) {
         setPage(prev => prev + 1);
       }
     });
-    if (node) observer.current.observe(node);
-  }, [loadingMore, hasMore]);
+    observer.current.observe(node);
+  }, []);
 
   useEffect(() => {
     async function loadResults() {
@@ -82,8 +90,11 @@ export default function AdminResults() {
           getTestSections(testId)
         ]);
         setTest(testResponse?.data || null);
-        const initialResults = Array.isArray(resultsResponse?.data) ? resultsResponse.data : [];
+        
+        const responseData = resultsResponse?.data || {};
+        const initialResults = Array.isArray(responseData.results) ? responseData.results : Array.isArray(responseData) ? responseData : [];
         setResults(initialResults);
+        setTotalCount(responseData.totalCount || initialResults.length);
         setHasMore(initialResults.length === 30);
         setPage(1);
         
@@ -120,7 +131,9 @@ export default function AdminResults() {
       try {
         const res = await getAdminTestResults(testId, page, 30);
         if (!active) return;
-        const newResults = Array.isArray(res?.data) ? res.data : [];
+        const responseData = res?.data || {};
+        const newResults = Array.isArray(responseData.results) ? responseData.results : Array.isArray(responseData) ? responseData : [];
+        
         setResults(prev => {
           const existingIds = new Set(prev.map(r => r.id));
           const filteredNew = newResults.filter(r => !existingIds.has(r.id));
@@ -213,7 +226,7 @@ export default function AdminResults() {
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600">Response viewer</p>
           <h1 className="mt-2 font-display text-4xl font-black tracking-[-0.04em]">{test?.title || "Assessment responses"}</h1>
-          <p className="mt-3 text-sm text-muted-foreground">{results.length} submitted response{results.length === 1 ? "" : "s"}</p>
+          <p className="mt-3 text-sm text-muted-foreground">Showing {results.length} of {totalCount} response{totalCount === 1 ? "" : "s"}</p>
         </div>
         <button type="button" disabled={!results.length} onClick={exportToExcel} className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50">Export to Excel</button>
       </div>
