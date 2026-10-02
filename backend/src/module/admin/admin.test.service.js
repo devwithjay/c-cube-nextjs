@@ -2,6 +2,7 @@ import {
   findAllTests,
   findTestById,
   findResultsByTestId,
+  countResultsByTestId,
   findRetestRequestsByTestId,
   updateRetestRequest,
   createTest,
