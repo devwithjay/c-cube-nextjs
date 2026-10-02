@@ -66,7 +66,7 @@ export default function AdminResults() {
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
-        loadMore();
+        setPage(prev => prev + 1);
       }
     });
     if (node) observer.current.observe(node);
@@ -112,26 +112,30 @@ export default function AdminResults() {
     loadResults();
   }, [testId]);
 
-  async function loadMore() {
-    if (!hasMore || loadingMore) return;
-    setLoadingMore(true);
-    try {
-      const nextPage = page + 1;
-      const res = await getAdminTestResults(testId, nextPage, 30);
-      const newResults = Array.isArray(res?.data) ? res.data : [];
-      setResults(prev => {
-        const existingIds = new Set(prev.map(r => r.id));
-        const filteredNew = newResults.filter(r => !existingIds.has(r.id));
-        return [...prev, ...filteredNew];
-      });
-      setPage(nextPage);
-      setHasMore(newResults.length === 30);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingMore(false);
+  useEffect(() => {
+    if (page === 1) return;
+    let active = true;
+    async function fetchMore() {
+      setLoadingMore(true);
+      try {
+        const res = await getAdminTestResults(testId, page, 30);
+        if (!active) return;
+        const newResults = Array.isArray(res?.data) ? res.data : [];
+        setResults(prev => {
+          const existingIds = new Set(prev.map(r => r.id));
+          const filteredNew = newResults.filter(r => !existingIds.has(r.id));
+          return [...prev, ...filteredNew];
+        });
+        setHasMore(newResults.length === 30);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (active) setLoadingMore(false);
+      }
     }
-  }
+    fetchMore();
+    return () => { active = false; };
+  }, [page, testId]);
 
   function exportToExcel() {
     const header = dynamicColumns.map(([, label]) => label);
@@ -220,8 +224,8 @@ export default function AdminResults() {
 
       {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([key, label]) => <th key={key} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result, index) => <tr ref={index === results.length - 1 ? lastResultElementRef : null} key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : key === "gender" && result[key] ? result[key].charAt(0).toUpperCase() + result[key].slice(1) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
       {loadingMore && (
-        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-semibold">
-          <Spinner className="h-5 w-5" /> Loading more responses...
+        <div className="mt-6 mb-2 flex items-center justify-center">
+          <Spinner className="h-6 w-6 text-muted-foreground" />
         </div>
       )}
 
