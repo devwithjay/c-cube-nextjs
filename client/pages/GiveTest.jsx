@@ -1009,6 +1009,13 @@ export default function GiveTest() {
             Test Submitted Successfully!
           </h1>
 
+          {timeExpired && (
+            <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800 flex items-center justify-center gap-2 max-w-md mx-auto">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Your time was over, so the test was submitted automatically.</span>
+            </div>
+          )}
+
           <p className="text-lg leading-7 text-muted-foreground max-w-xl mb-8">
             Thank you for completing the 3Q Online Assessment. Your responses have been recorded.
             To receive your results and stay updated on further steps, please join your designated WhatsApp group below.
