@@ -996,7 +996,7 @@ export default function GiveTest() {
   if (result) {
     const whatsappLink = participant.gender === 'female' 
       ? "https://chat.whatsapp.com/FI23Jnp9pNZFObYHApsGfQ"
-      : "https://chat.whatsapp.com/DErjW6JXHC71L5RqTduT72";
+      : "https://chat.whatsapp.com/G4b1yijem689Yx6uhnh4bM?s=cl&p=a&mlu=4&ilr=4";
 
     return (
       <Shell>
