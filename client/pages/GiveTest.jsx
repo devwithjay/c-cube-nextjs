@@ -1039,6 +1039,24 @@ export default function GiveTest() {
      REGISTRATION
      ======================================================= */
 
+  if (assessment?.status === "closed") {
+    return (
+      <Shell>
+        <div className="flex flex-col items-center justify-center text-center py-16">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100 text-4xl text-red-600 mb-6 shadow-sm">
+            🔒
+          </div>
+          <h1 className="font-display text-4xl font-black tracking-tight text-foreground mb-4">
+            Test Closed
+          </h1>
+          <p className="text-lg leading-7 text-muted-foreground max-w-xl">
+            The test is closed and all submissions have been recorded.
+          </p>
+        </div>
+      </Shell>
+    );
+  }
+
   if (!sessionId) {
     return (
       <Shell>
