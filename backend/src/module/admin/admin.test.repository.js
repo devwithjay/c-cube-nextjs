@@ -315,8 +315,11 @@ export async function deleteTest(
 }
 
 export async function findResultsByTestId(
-  testId
+  testId,
+  page = 1,
+  limit = 30
 ) {
+  const offset = (page - 1) * limit;
   return all(
     `
     SELECT
@@ -347,8 +350,9 @@ export async function findResultsByTestId(
       ON p.id = s.participant_id
     WHERE r.test_id = ?
     ORDER BY r.submitted_at DESC
+    LIMIT ? OFFSET ?
     `,
-    [testId]
+    [testId, limit, offset]
   );
 }
 

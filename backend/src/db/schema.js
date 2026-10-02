@@ -351,6 +351,9 @@ export async function initializeDatabase() {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
+    -- Alter table to add auto_submitted flag for existing deployments
+    ALTER TABLE three_q_sessions ADD COLUMN IF NOT EXISTS is_auto_submitted BOOLEAN DEFAULT FALSE;
+
 
     /* ============================================================
        3Q SESSIONS

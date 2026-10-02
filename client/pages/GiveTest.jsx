@@ -432,7 +432,8 @@ export default function GiveTest() {
 
         const response =
           await submitAssessment(
-            sessionId
+            sessionId,
+            true
           );
 
         setResult(

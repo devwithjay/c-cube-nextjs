@@ -300,13 +300,13 @@ export async function closeAdminTest(
 
 
 export async function getAdminTestResults(
-  testId
+  testId,
+  page = 1,
+  limit = 30
 ) {
-
   return adminRequest(
-    `/admin/tests/${testId}/results`
+    `/admin/tests/${testId}/results?page=${page}&limit=${limit}`
   );
-
 }
 
 

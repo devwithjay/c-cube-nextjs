@@ -751,7 +751,8 @@ export async function getActiveOrSubmittedSession(
         started_at,
         expires_at,
         submitted_at,
-        status
+        status,
+        is_auto_submitted
       FROM three_q_sessions
       WHERE participant_id = ?
         AND test_id = ?
@@ -825,7 +826,8 @@ export async function getSessionById(
         started_at,
         expires_at,
         submitted_at,
-        status
+        status,
+        is_auto_submitted
       FROM three_q_sessions
       WHERE id = ?
       LIMIT 1
@@ -1388,19 +1390,22 @@ export async function getResultBySession(
  */
 export async function markSessionSubmitted(
   sessionId,
-  submittedAt
+  submittedAt,
+  isAutoSubmit = false
 ) {
   await run(
     `
       UPDATE three_q_sessions
       SET
         status = 'submitted',
-        submitted_at = ?
+        submitted_at = ?,
+        is_auto_submitted = ?
       WHERE id = ?
         AND status = 'active'
     `,
     [
       submittedAt,
+      isAutoSubmit,
       sessionId,
     ]
   );
@@ -1429,5 +1434,20 @@ export async function markSessionExpired(
 
   return getSessionById(
     sessionId
+  );
+}
+export async function reactivateSession(sessionId, startedAt, expiresAt) {
+  await run(
+    `
+      UPDATE three_q_sessions
+      SET
+        status = 'active',
+        started_at = ?,
+        expires_at = ?,
+        submitted_at = NULL,
+        is_auto_submitted = FALSE
+      WHERE id = ?
+    `,
+    [startedAt, expiresAt, sessionId]
   );
 }

@@ -43,7 +43,8 @@ import {
   createResult,
   getResultBySession,
   markSessionSubmitted,
-  markSessionExpired
+  markSessionExpired,
+  reactivateSession
 } from "./threeQ.repository.js";
 
 import { calculateThreeQScore } from "./threeQ.scoring.js";
@@ -499,10 +500,13 @@ export async function startTestSession(
     |--------------------------------------------------------------------------
     */
 
-    if (
-      existingSession.status ===
-      "submitted"
-    ) {
+    if (existingSession.status === "submitted") {
+      if (existingSession.is_auto_submitted) {
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + Number(test.duration_seconds) * 1000);
+        await reactivateSession(existingSession.id, now.toISOString(), expiresAt.toISOString());
+        return { sessionId: existingSession.id, testId: existingSession.test_id, participantId: existingSession.participant_id, startedAt: now.toISOString(), expiresAt: expiresAt.toISOString(), status: "active", resumed: true };
+      }
       const approvedRetestRequest =
         await findApprovedRetestRequest(
           participant.id,
@@ -580,14 +584,9 @@ export async function startTestSession(
       */
 
       if (now >= expiresAt) {
-        await markSessionExpired(
-          existingSession.id
-        );
-
-        throw createServiceError(
-          "This assessment session has expired.",
-          410
-        );
+        const expiresAtNew = new Date(now.getTime() + Number(test.duration_seconds) * 1000);
+        await reactivateSession(existingSession.id, now.toISOString(), expiresAtNew.toISOString());
+        return { sessionId: existingSession.id, testId: existingSession.test_id, participantId: existingSession.participant_id, startedAt: now.toISOString(), expiresAt: expiresAtNew.toISOString(), status: "active", resumed: true };
       }
 
       /*
@@ -1531,7 +1530,8 @@ export async function requestRetestPermission(
 */
 
 export async function submitTest(
-  sessionId
+  sessionId,
+  isAutoSubmit = false
 ) {
   /*
   |--------------------------------------------------------------------------
@@ -1713,7 +1713,8 @@ export async function submitTest(
 
         await markSessionSubmitted(
           sessionId,
-          submittedAt
+          submittedAt,
+          isAutoSubmit
         );
 
         return {

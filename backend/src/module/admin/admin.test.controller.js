@@ -525,7 +525,9 @@ export async function listTestResults(
       });
     }
 
-    const results = await getTestResults(testId);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 30);
+    const results = await getTestResults(testId, page, limit);
 
     return res.json({
       success: true,

@@ -665,9 +665,12 @@ export async function submitSession(
         });
     }
 
+    const isAutoSubmit = req.body && req.body.isAutoSubmit === true;
+
     const result =
       await submitTest(
-        sessionId
+        sessionId,
+        isAutoSubmit
       );
 
     return res

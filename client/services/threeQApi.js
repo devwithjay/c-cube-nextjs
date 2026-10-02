@@ -148,12 +148,14 @@ export async function saveAssessmentAnswersBatch(
    ========================================================= */
 
 export async function submitAssessment(
-  sessionId
+  sessionId,
+  isAutoSubmit = false
 ) {
   return request(
     `/3q/sessions/${sessionId}/submit`,
     {
-      method: "POST"
+      method: "POST",
+      body: JSON.stringify({ isAutoSubmit })
     }
   );
 }
