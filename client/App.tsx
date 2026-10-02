@@ -206,22 +206,22 @@ export default function App() {
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             className="mx-auto mt-8 max-w-xl relative group"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-cyan-500/10 rounded-2xl blur-lg transition-all duration-500 group-hover:opacity-100 opacity-50"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 rounded-2xl blur-lg transition-all duration-500 group-hover:opacity-100 opacity-50"></div>
             <div className="relative rounded-2xl border border-white/10 bg-black/40 backdrop-blur-2xl p-4 sm:p-5 shadow-2xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
               
               <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <div className="flex items-center gap-2 bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                   </span>
                   <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">Test is Live</span>
                 </div>
                 
                 <p className="text-center text-white/80 text-xs sm:text-sm leading-relaxed max-w-lg">
                   The test will be live till today evening, <strong className="text-white font-bold">9 PM</strong>.
-                  <br className="hidden sm:block mt-0.5" /> For any concerns, DM <span className="text-white font-medium">7385079307</span> or email at <a href="mailto:ccube@vit.edu" className="text-emerald-400 font-medium hover:text-emerald-300 transition-colors">ccube@vit.edu</a>.
+                  <br className="hidden sm:block mt-0.5" /> For any concerns, DM <span className="text-white font-medium">7385079307</span> or email at <a href="mailto:ccube@vit.edu" className="text-blue-400 font-medium hover:text-blue-300 transition-colors">ccube@vit.edu</a>.
                 </p>
               </div>
             </div>
