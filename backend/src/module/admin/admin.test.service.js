@@ -111,6 +111,7 @@ export async function createNewTest(
     await createTest({
 
       title,
+      slug: data.slug ? String(data.slug).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') : null,
 
       description:
         data.description
@@ -210,6 +211,7 @@ export async function updateDraftTest(
     {
 
       title,
+      slug: data.slug ? String(data.slug).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') : null,
 
       description:
         data.description

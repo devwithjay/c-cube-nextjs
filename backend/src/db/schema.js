@@ -171,6 +171,8 @@ export async function initializeDatabase() {
 
       title TEXT NOT NULL,
 
+      slug TEXT UNIQUE,
+
       description TEXT,
 
       duration_seconds INTEGER NOT NULL,
@@ -795,6 +797,13 @@ export async function initializeDatabase() {
 
     ALTER TABLE three_q_participants
       ADD COLUMN IF NOT EXISTS gender TEXT NOT NULL DEFAULT '';
+
+    /* ============================================================
+       TEST SLUG MIGRATION
+       ============================================================ */
+
+    ALTER TABLE three_q_tests
+      ADD COLUMN IF NOT EXISTS slug TEXT UNIQUE;
 
 
     /* ============================================================

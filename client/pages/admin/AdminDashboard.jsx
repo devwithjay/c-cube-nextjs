@@ -98,7 +98,7 @@ export default function AdminDashboard() {
 
   function openCreateDrawer() {
     setEditingTestId(null);
-    setCreateForm({ title: "", description: "", durationSeconds: 1800, liveMessage: "Assessment will be live shortly." });
+    setCreateForm({ title: "", slug: "", description: "", durationSeconds: 1800, liveMessage: "Assessment will be live shortly." });
     setIsDrawerOpen(true);
   }
 
@@ -106,6 +106,7 @@ export default function AdminDashboard() {
     setEditingTestId(test.id);
     setCreateForm({
       title: test.title,
+      slug: test.slug || "",
       description: test.description || "",
       durationSeconds: test.duration_seconds || 1800,
       liveMessage: test.live_message || "Assessment will be live shortly."
@@ -263,13 +264,34 @@ export default function AdminDashboard() {
                 <DrawerDescription>Configure the basic details of the assessment.</DrawerDescription>
               </DrawerHeader>
               <form onSubmit={handleSaveTest} className="p-4 flex flex-col gap-5">
-                <div className="grid gap-5 md:grid-cols-[1fr_220px]">
+                <div className="grid gap-5 md:grid-cols-2">
                   <label className="text-sm font-bold text-foreground">
                     Title
                     <input
                       required
                       value={createForm.title}
                       onChange={(event) => setCreateForm({ ...createForm, title: event.target.value })}
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
+                    />
+                  </label>
+                  <label className="text-sm font-bold text-foreground">
+                    URL Slug
+                    <input
+                      value={createForm.slug}
+                      placeholder="e.g. mock-test-1 (optional)"
+                      onChange={(event) => setCreateForm({ ...createForm, slug: event.target.value })}
+                      className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
+                    />
+                  </label>
+                </div>
+                <div className="grid gap-5 md:grid-cols-[1fr_220px]">
+                  <label className="text-sm font-bold text-foreground">
+                    Live Message (Timing/Details)
+                    <input
+                      required
+                      value={createForm.liveMessage}
+                      onChange={(event) => setCreateForm({ ...createForm, liveMessage: event.target.value })}
+                      placeholder="e.g. Assessment will be live on 2nd of October, from 6 AM to 11 PM"
                       className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
                     />
                   </label>
@@ -285,16 +307,6 @@ export default function AdminDashboard() {
                     />
                   </label>
                 </div>
-                <label className="text-sm font-bold text-foreground">
-                  Live Message (Timing/Details)
-                  <input
-                    required
-                    value={createForm.liveMessage}
-                    onChange={(event) => setCreateForm({ ...createForm, liveMessage: event.target.value })}
-                    placeholder="e.g. Assessment will be live on 2nd of October, from 6 AM to 11 PM"
-                    className="mt-2 w-full rounded-xl border border-border px-4 py-3 bg-background text-foreground outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 placeholder:text-muted-foreground"
-                  />
-                </label>
                 <label className="text-sm font-bold text-foreground">
                   Description
                   <textarea
@@ -514,7 +526,7 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => {
-                            const link = `${window.location.origin}/give-test/${test.id}`;
+                            const link = `${window.location.origin}/give-test/${test.slug || test.id}`;
                             navigator.clipboard.writeText(link);
                             toast({ title: "Copied!", description: "Link copied to clipboard." });
                           }}

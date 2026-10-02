@@ -133,6 +133,7 @@ export async function createTest(
 
     const {
       title,
+      slug,
       description,
       durationSeconds,
       liveMessage
@@ -161,6 +162,7 @@ export async function createTest(
       await createNewTest({
 
         title,
+        slug,
 
         description,
 
@@ -240,6 +242,7 @@ export async function updateTest(
 
     const {
       title,
+      slug,
       description,
       durationSeconds,
       liveMessage
@@ -271,6 +274,7 @@ export async function updateTest(
         {
 
           title,
+          slug,
 
           description,
 

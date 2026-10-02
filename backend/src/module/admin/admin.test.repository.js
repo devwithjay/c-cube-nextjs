@@ -18,6 +18,7 @@ export async function findAllTests() {
     SELECT
       id,
       title,
+      slug,
       description,
       duration_seconds,
       live_message,
@@ -52,6 +53,7 @@ export async function findTestById(
     SELECT
       id,
       title,
+      slug,
       description,
       duration_seconds,
       live_message,
@@ -74,6 +76,40 @@ export async function findTestById(
 
 /*
 |--------------------------------------------------------------------------
+| Find test by ID or Slug
+|--------------------------------------------------------------------------
+*/
+
+export async function findTestByIdOrSlug(
+  idOrSlug
+) {
+
+  let query = `
+    SELECT
+      id,
+      title,
+      slug,
+      description,
+      duration_seconds,
+      live_message,
+      status,
+      version,
+      created_at,
+      updated_at
+    FROM three_q_tests
+  `;
+  
+  if (isNaN(idOrSlug)) {
+    query += ` WHERE slug = ? `;
+  } else {
+    query += ` WHERE id = ? `;
+  }
+
+  return get(query, [idOrSlug]);
+}
+
+/*
+|--------------------------------------------------------------------------
 | Create test
 |--------------------------------------------------------------------------
 */
@@ -88,6 +124,7 @@ export async function createTest(
       INSERT INTO three_q_tests
       (
         title,
+        slug,
         description,
         duration_seconds,
         live_message,
@@ -95,10 +132,11 @@ export async function createTest(
         version
       )
 
-      VALUES (?, ?, ?, ?, 'draft', ?)
+      VALUES (?, ?, ?, ?, ?, 'draft', ?)
       `,
       [
         test.title,
+        test.slug || null,
         test.description,
         test.durationSeconds,
         test.liveMessage || "Assessment will be live shortly.",
@@ -131,6 +169,7 @@ export async function updateTest(
 
     SET
       title = ?,
+      slug = ?,
       description = ?,
       duration_seconds = ?,
       live_message = ?,
@@ -142,6 +181,7 @@ export async function updateTest(
     `,
     [
       test.title,
+      test.slug || null,
       test.description,
       test.durationSeconds,
       test.liveMessage || "Assessment will be live shortly.",
