@@ -1659,13 +1659,8 @@ export async function submitTest(
   */
 
   let totalQuestions = 0;
-
-  for (const section of sections) {
-    totalQuestions +=
-      Number(
-        section.question_limit || 0
-      );
-  }
+  const allQuestions = await findQuestionsByTestId(session.test_id);
+  totalQuestions = allQuestions.length;
 
   /*
   |--------------------------------------------------------------------------
