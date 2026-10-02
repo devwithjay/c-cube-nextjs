@@ -6,7 +6,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, LoaderIcon } from "lucide-react";
+
+function Spinner({ className, ...props }) {
+  return (
+    <LoaderIcon
+      role="status"
+      aria-label="Loading"
+      className={`size-4 animate-spin ${className || ""}`}
+      {...props}
+    />
+  )
+}
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -107,7 +119,11 @@ export default function AdminResults() {
       const nextPage = page + 1;
       const res = await getAdminTestResults(testId, nextPage, 30);
       const newResults = Array.isArray(res?.data) ? res.data : [];
-      setResults(prev => [...prev, ...newResults]);
+      setResults(prev => {
+        const existingIds = new Set(prev.map(r => r.id));
+        const filteredNew = newResults.filter(r => !existingIds.has(r.id));
+        return [...prev, ...filteredNew];
+      });
       setPage(nextPage);
       setHasMore(newResults.length === 30);
     } catch (e) {
@@ -203,7 +219,11 @@ export default function AdminResults() {
       {!error && !results.length && <div className="mt-8 rounded-2xl bg-card p-12 text-center shadow-sm"><h2 className="text-xl font-black">No submitted responses yet</h2><p className="mt-2 text-sm text-muted-foreground">Responses will appear here after participants submit the assessment.</p></div>}
 
       {!!results.length && <div className="mt-8 overflow-hidden rounded-2xl bg-card shadow-sm"><div className="overflow-x-auto"><table className="min-w-[1250px] w-full text-left text-sm"><thead className="bg-muted text-xs font-black uppercase tracking-[0.08em] text-muted-foreground"><tr>{dynamicColumns.map(([key, label]) => <th key={key} className="whitespace-nowrap px-4 py-4">{label}</th>)}</tr></thead><tbody className="divide-y divide-border">{results.map((result, index) => <tr ref={index === results.length - 1 ? lastResultElementRef : null} key={result.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => setSelectedResult(result)}>{dynamicColumns.map(([key]) => <td key={key} className="whitespace-nowrap px-4 py-4 text-card-foreground">{key === "submitted_at" ? formatDate(result[key]) : key === "gender" && result[key] ? result[key].charAt(0).toUpperCase() + result[key].slice(1) : result[key]}</td>)}</tr>)}</tbody></table></div></div>}
-      {loadingMore && <div className="mt-4 text-center text-sm text-muted-foreground font-semibold">Loading more responses...</div>}
+      {loadingMore && (
+        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-muted-foreground font-semibold">
+          <Spinner className="h-5 w-5" /> Loading more responses...
+        </div>
+      )}
 
       <Dialog open={!!selectedResult} onOpenChange={(open) => {
         if (!open) {
