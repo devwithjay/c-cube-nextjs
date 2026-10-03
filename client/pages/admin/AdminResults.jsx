@@ -60,6 +60,7 @@ export default function AdminResults() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [savingParticipant, setSavingParticipant] = useState(false);
+  const [exportingAll, setExportingAll] = useState(false);
   const { theme, setTheme } = useTheme();
   const observer = useRef();
   const lastResultElementRef = useCallback(node => {
@@ -165,6 +166,35 @@ export default function AdminResults() {
     URL.revokeObjectURL(url);
   }
 
+  async function exportAllToExcel() {
+    try {
+      setExportingAll(true);
+      const res = await getAdminTestResults(testId, 1, totalCount > 0 ? totalCount : 100000);
+      const allResults = Array.isArray(res?.data?.results) ? res.data.results : [];
+      
+      const header = dynamicColumns.map(([, label]) => label);
+      const rows = allResults.map((result) =>
+        dynamicColumns.map(([key]) => result[key] ?? "")
+      );
+      const csv = [header, ...rows]
+        .map((row) => row.map(escapeCsv).join(","))
+        .join("\r\n");
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${slugify(test?.title || "assessment")}-all-responses.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert("Failed to export all responses: " + e.message);
+    } finally {
+      setExportingAll(false);
+    }
+  }
+
   function handleEditClick() {
     setEditForm({
       name: selectedResult.name || "",
@@ -224,7 +254,13 @@ export default function AdminResults() {
           <h1 className="mt-2 font-display text-4xl font-black tracking-[-0.04em]">{test?.title || "Assessment responses"}</h1>
           <p className="mt-3 text-sm text-muted-foreground">Showing {results.length} of {totalCount} response{totalCount === 1 ? "" : "s"}</p>
         </div>
-        <button type="button" disabled={!results.length} onClick={exportToExcel} className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50">Export to Excel</button>
+        <div className="flex gap-2">
+          <button type="button" disabled={!results.length} onClick={exportToExcel} className="rounded-xl bg-muted px-5 py-3 text-sm font-black text-foreground hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-50">Export Visible</button>
+          <button type="button" disabled={!results.length || exportingAll} onClick={exportAllToExcel} className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-black text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 flex items-center gap-2">
+            {exportingAll && <Spinner className="h-4 w-4" />}
+            Export All
+          </button>
+        </div>
       </div>
 
       {error && <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{error}</div>}

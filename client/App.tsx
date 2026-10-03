@@ -83,11 +83,10 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* ─── NAVBAR ─── */}
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-background/80 backdrop-blur-xl border-b shadow-sm py-2"
-            : "bg-transparent py-4"
-        }`}
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-background/80 backdrop-blur-xl border-b shadow-sm py-2"
+          : "bg-transparent py-4"
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           {/* Logo */}
@@ -118,12 +117,7 @@ export default function App() {
             >
               Contact
             </button>
-            <button
-              onClick={() => window.location.href = '/give-test'}
-              className="rounded-full px-4 py-2 text-sm font-bold text-primary bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all ml-2 border border-primary/20"
-            >
-              Give Test
-            </button>
+
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="ml-2 rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors focus:outline-none"
@@ -135,12 +129,7 @@ export default function App() {
 
           {/* Mobile toggle */}
           <div className="flex items-center gap-2 md:hidden">
-            <button
-              onClick={() => window.location.href = '/test'}
-              className="rounded-full px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary hover:text-primary-foreground transition-all border border-primary/20"
-            >
-              Test
-            </button>
+
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="rounded-full p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors focus:outline-none"
@@ -187,7 +176,7 @@ export default function App() {
         </div>
 
         <div className="relative z-10 mx-auto w-full px-6 text-center mt-20">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
@@ -201,7 +190,7 @@ export default function App() {
             <ColourfulText text="Culture." />
           </h1>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -210,25 +199,20 @@ export default function App() {
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 rounded-2xl blur-lg transition-all duration-500 group-hover:opacity-100 opacity-50"></div>
             <div className="relative rounded-2xl border border-black/5 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-2xl p-4 sm:p-5 shadow-sm dark:shadow-2xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
-              
+
               <div className="flex flex-col items-center gap-3">
                 <div className="flex items-center gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.15)] dark:shadow-[0_0_10px_rgba(59,130,246,0.2)]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 dark:bg-blue-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600 dark:bg-blue-500"></span>
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">Test is Live</span>
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">Test Concluded</span>
                 </div>
-                
+
                 <p className="text-center text-foreground/80 text-xs sm:text-sm leading-relaxed max-w-lg">
-                  The test will be live till today evening, <strong className="text-foreground font-bold">9 PM</strong>.
-                  <br className="hidden sm:block mt-0.5" /> For any concerns, DM <span className="text-foreground font-medium">7385079307</span> or email at <a href="mailto:ccube@vit.edu" className="text-blue-600 dark:text-blue-400 font-medium hover:text-blue-500 dark:hover:text-blue-300 transition-colors">ccube@vit.edu</a>.
+                  Thank you for giving the test! <strong className="text-foreground font-bold">Further updates will be conveyed on the WhatsApp groups.</strong>
                 </p>
               </div>
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
@@ -244,13 +228,7 @@ export default function App() {
               <ChevronRight className="h-4 w-4" />
             </HoverBorderGradient>
 
-            <button
-              onClick={() => window.location.href = '/give-test'}
-              className="rounded-full bg-primary text-primary-foreground px-8 py-3.5 text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all border border-primary-foreground/10 flex items-center gap-2"
-            >
-              Give Test
-              <ChevronRight className="h-4 w-4" />
-            </button>
+
           </motion.div>
         </div>
       </section>
@@ -258,7 +236,7 @@ export default function App() {
       {/* ─── ABOUT / PILLARS ─── */}
       <section id="about" className="py-24 bg-muted/30 relative">
         <div className="mx-auto max-w-7xl px-6 relative z-10">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
@@ -269,7 +247,7 @@ export default function App() {
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Our Core Pillars</h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -300,7 +278,7 @@ export default function App() {
       {/* ─── VISION / MISSION ─── */}
       <section id="vision" className="py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-100px" }}
@@ -311,7 +289,7 @@ export default function App() {
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Vision & Mission</h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -325,7 +303,7 @@ export default function App() {
               <p className="text-sm font-semibold text-primary tracking-widest uppercase mb-6">Vision</p>
               <p className="text-2xl text-foreground leading-relaxed font-medium relative z-10">{clubInfo.vision}</p>
             </motion.div>
-            
+
             <motion.div variants={fadeUp} className="rounded-3xl border border-border/50 bg-gradient-to-bl from-card to-card/50 p-12 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-5">
                 <Lightbulb className="h-32 w-32" />
@@ -340,7 +318,7 @@ export default function App() {
       {/* ─── EVENTS (Consistent Aspect Ratio + BackgroundGradient) ─── */}
       <section id="events" className="py-32 bg-muted/30">
         <div className="mx-auto max-w-7xl px-6">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
@@ -351,7 +329,7 @@ export default function App() {
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Our Events</h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -383,7 +361,7 @@ export default function App() {
       {/* ─── FACULTY MENTOR (No Card styling) ─── */}
       <section id="mentor" className="py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
@@ -394,7 +372,7 @@ export default function App() {
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Faculty Mentor</h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
@@ -414,7 +392,7 @@ export default function App() {
               <h3 className="text-4xl font-bold text-foreground">{clubInfo.facultyMentor}</h3>
               <p className="text-xl text-primary font-semibold mt-3">{clubInfo.facultyMentorDetails.role}</p>
               <p className="text-muted-foreground mt-6 leading-relaxed text-lg max-w-2xl">{clubInfo.facultyMentorDetails.intro}</p>
-              
+
               <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-3">
                 {clubInfo.facultyMentorDetails.specialization.map((spec: string) => (
                   <span key={spec} className="rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary border border-primary/20">
@@ -422,7 +400,7 @@ export default function App() {
                   </span>
                 ))}
               </div>
-              
+
               <div className="mt-10 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center gap-6 text-base text-muted-foreground font-medium justify-center md:justify-start">
                 <span className="flex items-center gap-2">
                   <Globe className="h-5 w-5 text-primary" />
@@ -442,7 +420,7 @@ export default function App() {
       {/* ─── CORE TEAM (Consistent Aspect Ratio Shape) ─── */}
       <section id="team" className="py-32 bg-muted/30">
         <div className="mx-auto max-w-7xl px-6">
-          <motion.div 
+          <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
@@ -456,7 +434,7 @@ export default function App() {
             </p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -464,9 +442,9 @@ export default function App() {
             className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 items-start"
           >
             {coreTeam.map((member: TeamMember, i: number) => (
-              <motion.div 
-                variants={fadeUp} 
-                key={i} 
+              <motion.div
+                variants={fadeUp}
+                key={i}
                 className="group flex flex-col items-center text-center"
               >
                 <div className="relative mb-8 w-full max-w-[280px] aspect-[4/5] rounded-3xl overflow-hidden drop-shadow-xl transition-all duration-500">
@@ -514,7 +492,7 @@ export default function App() {
               </a>
             </div>
           </div>
-          
+
           <div className="border-t border-border/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-auto">
             <p className="text-sm text-muted-foreground font-medium">
               &copy; {new Date().getFullYear()} C Cube. All rights reserved.
