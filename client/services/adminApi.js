@@ -310,6 +310,15 @@ export async function getAdminTestResults(
 }
 
 
+export async function getAdminTestCertificates(
+  testId
+) {
+  return adminRequest(
+    `/admin/tests/${testId}/certificates`
+  );
+}
+
+
 /* =========================================================
    TEST SECTIONS
    ========================================================= */

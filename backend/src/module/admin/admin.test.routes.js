@@ -5,6 +5,7 @@ import {
   listTests,
   getTestById,
   listTestResults,
+  listCertificateStatus,
   listRetestRequests,
   reviewRetestRequest,
   createTest,
@@ -61,6 +62,11 @@ router.get(
 router.get(
   "/:testId/results",
   listTestResults
+);
+
+router.get(
+  "/:testId/certificates",
+  listCertificateStatus
 );
 
 router.get(

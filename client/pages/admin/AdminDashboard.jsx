@@ -92,6 +92,10 @@ export default function AdminDashboard() {
     navigate(`/admin/tests/${testId}/results`);
   }
 
+  function openCertificates(testId) {
+    navigate(`/admin/tests/${testId}/certificates`);
+  }
+
   function openSettings() {
     navigate("/admin/settings");
   }
@@ -503,6 +507,14 @@ export default function AdminDashboard() {
                       className="mt-3 w-full rounded-xl border border-border px-4 py-3.5 text-sm font-black text-foreground transition hover:bg-muted/50"
                     >
                       View responses
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => openCertificates(test.id)}
+                      className="mt-3 w-full rounded-xl border border-border px-4 py-3.5 text-sm font-black text-foreground transition hover:bg-muted/50"
+                    >
+                      Certificate downloads
                     </button>
 
                     <button

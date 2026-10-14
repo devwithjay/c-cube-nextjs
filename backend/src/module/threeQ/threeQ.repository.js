@@ -1451,3 +1451,37 @@ export async function reactivateSession(sessionId, startedAt, expiresAt) {
     [startedAt, expiresAt, sessionId]
   );
 }
+
+
+/**
+ * Record a certificate download. Repeat downloads only bump the counter,
+ * so each participant is counted once per test.
+ */
+export async function upsertCertificateDownload(
+  testId,
+  participantId
+) {
+  await run(
+    `
+      INSERT INTO three_q_certificate_downloads
+      (
+        test_id,
+        participant_id
+      )
+      VALUES (?, ?)
+
+      ON CONFLICT (
+        test_id,
+        participant_id
+      )
+
+      DO UPDATE SET
+        download_count =
+          three_q_certificate_downloads.download_count + 1,
+
+        last_downloaded_at =
+          CURRENT_TIMESTAMP
+    `,
+    [testId, participantId]
+  );
+}

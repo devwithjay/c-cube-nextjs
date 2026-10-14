@@ -194,28 +194,6 @@ export default function App() {
           </h1>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-            className="mx-auto mt-8 max-w-xl relative group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 rounded-2xl blur-lg transition-all duration-500 group-hover:opacity-100 opacity-50"></div>
-            <div className="relative rounded-2xl border border-black/5 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-2xl p-4 sm:p-5 shadow-sm dark:shadow-2xl overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
-
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex items-center gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.15)] dark:shadow-[0_0_10px_rgba(59,130,246,0.2)]">
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest">Test Concluded</span>
-                </div>
-
-                <p className="text-center text-foreground/80 text-xs sm:text-sm leading-relaxed max-w-lg">
-                  Thank you for giving the test! <strong className="text-foreground font-bold">Further updates will be conveyed on the WhatsApp groups.</strong>
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}

@@ -2,6 +2,7 @@ import {
   getAllTests,
   getTest,
   getTestResults,
+  getCertificateStatus,
   listRetestRequests as listTestRetests,
   reviewRetestRequest as reviewTestRetest,
   createNewTest,
@@ -637,6 +638,32 @@ export async function updateParticipantDetails(
     return res.status(200).json({
       success: true,
       message: "Participant details updated successfully."
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function listCertificateStatus(
+  req,
+  res,
+  next
+) {
+  try {
+    const testId = Number(req.params.testId);
+
+    if (!Number.isInteger(testId) || testId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid test ID."
+      });
+    }
+
+    const data = await getCertificateStatus(testId);
+
+    return res.json({
+      success: true,
+      data
     });
   } catch (error) {
     next(error);

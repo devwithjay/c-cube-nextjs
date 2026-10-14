@@ -1,10 +1,11 @@
 import {
   findParticipantByPRN,
   findPublishedTest,
-  getActiveOrSubmittedSession
+  getActiveOrSubmittedSession,
+  upsertCertificateDownload
 } from "./threeQ.repository.js";
 
-export async function checkCertificateEligibility(prn) {
+async function findEligibleSubmission(prn) {
   const participant = await findParticipantByPRN(prn);
   if (!participant) {
     const error = new Error("No test record found for this PRN.");
@@ -26,10 +27,22 @@ export async function checkCertificateEligibility(prn) {
     throw error;
   }
 
+  return { participant, test, session };
+}
+
+export async function checkCertificateEligibility(prn) {
+  const { participant, session } = await findEligibleSubmission(prn);
+
   return {
     eligible: true,
     participantName: participant.name,
     prn: participant.prn,
     submittedAt: session.submitted_at
   };
+}
+
+export async function recordCertificateDownload(prn) {
+  const { participant, test } = await findEligibleSubmission(prn);
+
+  await upsertCertificateDownload(test.id, participant.id);
 }

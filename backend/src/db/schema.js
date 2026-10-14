@@ -810,6 +810,41 @@ export async function initializeDatabase() {
 
 
     /* ============================================================
+       3Q CERTIFICATE DOWNLOADS
+
+       One row per participant per test, so the row count is the
+       number of unique people who downloaded a certificate.
+       ============================================================ */
+
+    CREATE TABLE IF NOT EXISTS three_q_certificate_downloads (
+      id SERIAL PRIMARY KEY,
+
+      test_id INTEGER NOT NULL,
+
+      participant_id INTEGER NOT NULL,
+
+      download_count INTEGER NOT NULL DEFAULT 1,
+
+      first_downloaded_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+      last_downloaded_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+      FOREIGN KEY (test_id)
+        REFERENCES three_q_tests(id)
+        ON DELETE CASCADE,
+
+      FOREIGN KEY (participant_id)
+        REFERENCES three_q_participants(id)
+        ON DELETE CASCADE,
+
+      UNIQUE (
+        test_id,
+        participant_id
+      )
+    );
+
+
+    /* ============================================================
        COMPLETE
        ============================================================ */
   `);

@@ -5,6 +5,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminAssessment from "./pages/admin/AdminAssessment";
 import AdminResults from "./pages/admin/AdminResults";
+import AdminCertificates from "./pages/admin/AdminCertificates";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import AdminSettings from "./pages/admin/AdminSettings";
 import GiveTest from "./pages/GiveTest";
@@ -36,6 +37,14 @@ export default function Router() {
         element={
           <ProtectedAdminRoute>
             <AdminResults />
+          </ProtectedAdminRoute>
+        }
+      />
+      <Route
+        path="/admin/tests/:testId/certificates"
+        element={
+          <ProtectedAdminRoute>
+            <AdminCertificates />
           </ProtectedAdminRoute>
         }
       />

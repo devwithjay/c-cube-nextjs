@@ -3,6 +3,7 @@ import {
   findTestById,
   findResultsByTestId,
   countResultsByTestId,
+  findCertificateStatusByTestId,
   findRetestRequestsByTestId,
   updateRetestRequest,
   createTest,
@@ -430,4 +431,33 @@ export async function unpublishTest(
     );
   }
   return updatedTest;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Certificate downloads: unique downloaders vs pending participants
+|--------------------------------------------------------------------------
+*/
+
+export async function getCertificateStatus(
+  testId
+) {
+  const test = await findTestById(testId);
+
+  if (!test) {
+    const error = new Error("Test not found.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const participants = await findCertificateStatusByTestId(testId);
+  const downloaded = participants.filter((participant) => participant.first_downloaded_at).length;
+
+  return {
+    totalEligible: participants.length,
+    downloaded,
+    pending: participants.length - downloaded,
+    participants
+  };
 }

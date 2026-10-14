@@ -11,7 +11,8 @@ import {
   getSessionResult,
   requestRetest,
   getTestByIdPublic,
-  checkCertificateStatus
+  checkCertificateStatus,
+  recordCertificateDownloadByPrn
 } from "./threeQ.controller.js";
 
 
@@ -155,6 +156,11 @@ router.post(
 router.get(
   "/certificate-check/:prn",
   checkCertificateStatus
+);
+
+router.post(
+  "/certificate-download/:prn",
+  recordCertificateDownloadByPrn
 );
 
 

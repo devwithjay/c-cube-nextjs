@@ -55,6 +55,8 @@ export default function CertificateDownloadModal({ isOpen, onClose }: { isOpen: 
       });
       pdf.addImage(imgData, 'PNG', 0, 0, 1122, 793);
       pdf.save(`CCube_Certificate_${certData?.participantName.replace(/\s+/g, '_')}.pdf`);
+      // Best-effort tracking for the admin panel; never block the download on it.
+      fetch(`/api/3q/certificate-download/${encodeURIComponent(certData!.prn)}`, { method: 'POST' }).catch(() => {});
       handleClose();
     } catch (err) {
       setError('Failed to generate PDF. Make sure you are on a modern browser.');

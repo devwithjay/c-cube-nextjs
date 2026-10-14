@@ -479,3 +479,42 @@ export async function countResultsByTestId(testId) {
   );
   return Number(result?.total || 0);
 }
+
+/*
+|--------------------------------------------------------------------------
+| Certificate status for every participant who submitted the test
+|--------------------------------------------------------------------------
+*/
+
+export async function findCertificateStatusByTestId(testId) {
+  return all(
+    `
+    SELECT
+      p.id AS participant_id,
+      p.name,
+      p.prn,
+      p.branch,
+      p.division,
+      p.college_email,
+      MAX(s.submitted_at) AS submitted_at,
+      d.download_count,
+      d.first_downloaded_at,
+      d.last_downloaded_at
+    FROM three_q_sessions s
+    INNER JOIN three_q_participants p
+      ON p.id = s.participant_id
+    LEFT JOIN three_q_certificate_downloads d
+      ON d.participant_id = p.id
+      AND d.test_id = s.test_id
+    WHERE s.test_id = ?
+      AND s.status = 'submitted'
+    GROUP BY
+      p.id,
+      d.id
+    ORDER BY
+      d.first_downloaded_at DESC NULLS LAST,
+      p.name ASC
+    `,
+    [testId]
+  );
+}
