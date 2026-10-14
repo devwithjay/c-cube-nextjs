@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useLayoutEffect, useRef } from 'react';
 
 interface CertificateProps {
   participantName: string;
@@ -67,11 +67,41 @@ const Signature = ({ src, name, title }: { src: string; name: string; title: str
   </div>
 );
 
+// "ANIKET  kailas BHOSALE" -> "Aniket Kailas Bhosale"; also capitalises after hyphens and apostrophes.
+function toTitleCase(name: string) {
+  return name
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase()
+    .replace(/(^|[\s'-])(\p{L})/gu, (_, sep: string, letter: string) => sep + letter.toUpperCase());
+}
+
+const NAME_MAX_WIDTH = 900;
+const NAME_MAX_SIZE = 72;
+const NAME_MIN_SIZE = 28;
+
 const CertificateTemplate = forwardRef<HTMLDivElement, CertificateProps>(({ participantName }, ref) => {
   // The 3Q assessment was held on a single day, so every certificate carries that date.
   const dateStr = '2 October 2026';
-  // Shrink long names so they stay on one line inside the frame.
-  const nameSize = participantName.length > 30 ? 48 : participantName.length > 22 ? 60 : 72;
+  const displayName = toTitleCase(participantName);
+  const nameRef = useRef<HTMLSpanElement>(null);
+
+  // Shrink the name until it fits the frame. Re-runs once the script font has loaded,
+  // since fallback-font widths are different.
+  useLayoutEffect(() => {
+    const el = nameRef.current;
+    if (!el) return;
+    const fit = () => {
+      let size = NAME_MAX_SIZE;
+      el.style.fontSize = `${size}px`;
+      while (el.offsetWidth > NAME_MAX_WIDTH && size > NAME_MIN_SIZE) {
+        size -= 2;
+        el.style.fontSize = `${size}px`;
+      }
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+  }, [displayName]);
 
   return (
     <div
@@ -129,8 +159,8 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateProps>(({ part
         <p style={{ margin: 0, fontSize: '13px', lineHeight: '18px', fontWeight: 600, letterSpacing: '5px', color: C.muted, textTransform: 'uppercase' }}>
           This certificate is proudly presented to
         </p>
-        <p style={{ margin: '6px 0 0', height: '100px', lineHeight: '100px', fontFamily: F.script, fontSize: `${nameSize}px`, color: C.navy, whiteSpace: 'nowrap' }}>
-          {participantName}
+        <p style={{ margin: '6px 0 0', height: '100px', lineHeight: '100px', fontFamily: F.script, color: C.navy, whiteSpace: 'nowrap' }}>
+          <span ref={nameRef} style={{ display: 'inline-block', fontSize: `${NAME_MAX_SIZE}px` }}>{displayName}</span>
         </p>
 
         <p style={{ margin: '24px auto 0', width: '820px', fontFamily: F.serif, fontSize: '21px', lineHeight: '32px', fontWeight: 500, color: C.ink }}>
