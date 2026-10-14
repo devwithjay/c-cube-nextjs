@@ -890,3 +890,18 @@ export async function getTestByIdPublic(req, res, next) {
     next(error);
   }
 }
+
+import { checkCertificateEligibility } from "./threeQ.certificate.js";
+
+export async function checkCertificateStatus(req, res, next) {
+  try {
+    const prn = req.params.prn;
+    if (!prn) {
+      return res.status(400).json({ success: false, message: "PRN is required." });
+    }
+    const result = await checkCertificateEligibility(prn);
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}

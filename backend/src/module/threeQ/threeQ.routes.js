@@ -10,7 +10,8 @@ import {
   submitSession,
   getSessionResult,
   requestRetest,
-  getTestByIdPublic
+  getTestByIdPublic,
+  checkCertificateStatus
 } from "./threeQ.controller.js";
 
 
@@ -142,6 +143,18 @@ router.get(
 router.post(
   "/retest-request",
   requestRetest
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| CHECK CERTIFICATE
+|--------------------------------------------------------------------------
+*/
+
+router.get(
+  "/certificate-check/:prn",
+  checkCertificateStatus
 );
 
 

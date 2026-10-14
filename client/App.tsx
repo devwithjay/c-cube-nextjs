@@ -10,6 +10,8 @@ import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { useTheme } from "next-themes";
+import CertificateDownloadModal from "./components/CertificateDownloadModal";
+
 
 /* ================================================================
    TYPES
@@ -60,6 +62,7 @@ const fadeUp: any = {
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [certModalOpen, setCertModalOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -228,10 +231,20 @@ export default function App() {
               <ChevronRight className="h-4 w-4" />
             </HoverBorderGradient>
 
-
+            <HoverBorderGradient
+              containerClassName="rounded-full"
+              as="button"
+              className="bg-foreground text-background flex items-center space-x-2 px-8 py-3 text-base font-semibold hover:shadow-lg transition-shadow"
+              onClick={() => setCertModalOpen(true)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              <span>Download Certificate</span>
+            </HoverBorderGradient>
           </motion.div>
         </div>
       </section>
+
+      <CertificateDownloadModal isOpen={certModalOpen} onClose={() => setCertModalOpen(false)} />
 
       {/* ─── ABOUT / PILLARS ─── */}
       <section id="about" className="py-24 bg-muted/30 relative">
